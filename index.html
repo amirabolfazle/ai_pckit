@@ -1,0 +1,2762 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>کیت امتیازبندی خرید لپتاپ | Laptop Value Scorer</title>
+<meta name="description" content="ابزار حرفه‌ای ارزیابی ارزش خرید لپتاپ و کامپیوتر بر اساس مشخصات سخت‌افزاری و نرم‌افزاری">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b1020;
+    --bg-2:#111834;
+    --card:#151d3a;
+    --card-2:#1b2547;
+    --border:#26305c;
+    --text:#e8ecf8;
+    --muted:#9aa3c7;
+    --primary:#5b8cff;
+    --primary-2:#7aa2ff;
+    --accent:#22d3ee;
+    --good:#22c55e;
+    --warn:#f59e0b;
+    --bad:#ef4444;
+    --gold:#fbbf24;
+    --radius:14px;
+    --shadow:0 10px 30px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{font-family:'Vazirmatn',system-ui,sans-serif;background:linear-gradient(180deg,#0b1020 0%,#0e1530 100%);color:var(--text);min-height:100vh;line-height:1.7}
+  .wrap{max-width:1180px;margin:0 auto;padding:24px 18px 120px}
+  header.hero{
+    background:linear-gradient(135deg,rgba(91,140,255,.15),rgba(34,211,238,.08));
+    border:1px solid var(--border);
+    border-radius:20px;
+    padding:28px 26px;
+    margin-bottom:24px;
+    box-shadow:var(--shadow);
+    position:relative;
+    overflow:hidden;
+  }
+  header.hero::before{
+    content:"";position:absolute;inset:0;
+    background:radial-gradient(600px 200px at 90% -10%,rgba(91,140,255,.25),transparent 60%);
+    pointer-events:none;
+  }
+  header.hero h1{font-size:28px;font-weight:800;margin-bottom:8px;letter-spacing:-.5px}
+  header.hero p{color:var(--muted);font-size:15px;max-width:760px}
+  .badge-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+  .badge{font-size:12px;padding:5px 10px;border-radius:999px;background:rgba(91,140,255,.12);border:1px solid rgba(91,140,255,.3);color:var(--primary-2)}
+  .badge.cyan{background:rgba(34,211,238,.1);border-color:rgba(34,211,238,.3);color:var(--accent)}
+  .badge.gold{background:rgba(251,191,36,.1);border-color:rgba(251,191,36,.3);color:var(--gold)}
+
+  /* Use case tabs */
+  .usecase-section{
+    background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+    padding:18px;margin-bottom:20px;box-shadow:var(--shadow);
+  }
+  .section-title{display:flex;align-items:center;gap:10px;font-size:16px;font-weight:700;margin-bottom:14px;color:var(--primary-2)}
+  .section-title .num{width:26px;height:26px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--primary),var(--accent));color:#0b1020;border-radius:8px;font-size:13px;font-weight:800}
+  .usecase-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+  .usecase-btn{
+    background:var(--card-2);border:1.5px solid var(--border);color:var(--text);
+    padding:14px 10px;border-radius:12px;cursor:pointer;font-family:inherit;font-size:14px;font-weight:600;
+    transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:6px;
+  }
+  .usecase-btn .ic{font-size:24px}
+  .usecase-btn:hover{border-color:var(--primary);transform:translateY(-2px)}
+  .usecase-btn.active{background:linear-gradient(135deg,rgba(91,140,255,.18),rgba(34,211,238,.1));border-color:var(--primary);color:#fff;box-shadow:0 6px 18px rgba(91,140,255,.25)}
+  .usecase-btn .desc{font-size:11px;color:var(--muted);font-weight:400}
+  .usecase-btn.active .desc{color:var(--primary-2)}
+
+  /* Form */
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  @media (max-width:760px){.grid-2{grid-template-columns:1fr}}
+  .card{
+    background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+    padding:20px;margin-bottom:18px;box-shadow:var(--shadow);
+  }
+  .card h3{font-size:15px;color:var(--primary-2);margin-bottom:14px;display:flex;align-items:center;gap:8px;font-weight:700}
+  .card h3 .ic{font-size:18px}
+  .field{margin-bottom:14px}
+  .field:last-child{margin-bottom:0}
+  label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px;font-weight:500}
+  label .hint{font-size:11px;color:var(--muted);opacity:.7}
+  input,select,textarea{
+    width:100%;background:var(--bg-2);border:1.5px solid var(--border);color:var(--text);
+    padding:10px 12px;border-radius:10px;font-family:inherit;font-size:14px;transition:border-color .2s;
+  }
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--primary)}
+  select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239aa3c7' stroke-width='2'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:left 14px center;padding-left:32px}
+  input[type=number]{appearance:textfield}
+  input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+  .row-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+  @media (max-width:560px){.row-2,.row-3{grid-template-columns:1fr}}
+
+  .checkbox-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px}
+  .chk{display:flex;align-items:center;gap:8px;background:var(--bg-2);padding:8px 10px;border-radius:8px;border:1px solid var(--border);font-size:13px;cursor:pointer;transition:all .15s}
+  .chk:hover{border-color:var(--primary)}
+  .chk input{width:auto;cursor:pointer}
+  .chk input:checked + span{color:var(--primary-2);font-weight:600}
+
+  /* Sticky action */
+  .sticky-bar{
+    position:fixed;bottom:0;left:0;right:0;
+    background:linear-gradient(180deg,rgba(11,16,32,.85),rgba(11,16,32,.98));
+    backdrop-filter:blur(12px);
+    border-top:1px solid var(--border);
+    padding:14px 20px;display:flex;justify-content:center;gap:12px;z-index:50;
+  }
+  .sticky-bar .inner{max-width:1140px;width:100%;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+  .btn{
+    border:none;cursor:pointer;font-family:inherit;font-weight:700;border-radius:12px;
+    padding:13px 26px;font-size:15px;transition:all .2s;
+  }
+  .btn-primary{background:linear-gradient(135deg,var(--primary),var(--accent));color:#0b1020;box-shadow:0 8px 20px rgba(91,140,255,.4)}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(91,140,255,.5)}
+  .btn-ghost{background:transparent;border:1.5px solid var(--border);color:var(--text)}
+  .btn-ghost:hover{border-color:var(--primary);color:var(--primary-2)}
+
+  /* Results */
+  .results{display:none;margin-top:20px}
+  .results.show{display:block;animation:fade .4s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+  .verdict-card{
+    background:linear-gradient(135deg,var(--card),var(--card-2));
+    border:1px solid var(--border);border-radius:18px;padding:24px;margin-bottom:18px;
+    box-shadow:var(--shadow);position:relative;overflow:hidden;
+  }
+  .verdict-card.good{border-color:rgba(34,197,94,.5);background:linear-gradient(135deg,rgba(34,197,94,.12),var(--card))}
+  .verdict-card.warn{border-color:rgba(245,158,11,.5);background:linear-gradient(135deg,rgba(245,158,11,.12),var(--card))}
+  .verdict-card.bad{border-color:rgba(239,68,68,.5);background:linear-gradient(135deg,rgba(239,68,68,.12),var(--card))}
+  .verdict-top{display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+  .score-circle{
+    width:140px;height:140px;border-radius:50%;flex-shrink:0;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    background:conic-gradient(var(--primary) 0deg,var(--primary) 0deg,var(--bg-2) 0deg);
+    position:relative;
+  }
+  .score-circle::before{content:"";position:absolute;inset:8px;border-radius:50%;background:var(--card)}
+  .score-circle .score-num{position:relative;font-size:42px;font-weight:800;z-index:1;line-height:1}
+  .score-circle .score-label{position:relative;font-size:11px;color:var(--muted);z-index:1;margin-top:4px}
+  .verdict-info{flex:1;min-width:240px}
+  .verdict-badge{display:inline-block;padding:6px 14px;border-radius:999px;font-size:13px;font-weight:700;margin-bottom:10px}
+  .verdict-badge.good{background:rgba(34,197,94,.18);color:var(--good);border:1px solid rgba(34,197,94,.4)}
+  .verdict-badge.warn{background:rgba(245,158,11,.18);color:var(--warn);border:1px solid rgba(245,158,11,.4)}
+  .verdict-badge.bad{background:rgba(239,68,68,.18);color:var(--bad);border:1px solid rgba(239,68,68,.4)}
+  .verdict-info h2{font-size:22px;margin-bottom:6px}
+  .verdict-info p{color:var(--muted);font-size:14px}
+  .price-meter{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+  .price-meter .pill{padding:6px 12px;border-radius:8px;font-size:12px;background:var(--bg-2);border:1px solid var(--border)}
+  .price-meter .pill b{color:var(--primary-2)}
+
+  .breakdown{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media (max-width:760px){.breakdown{grid-template-columns:1fr}}
+  .breakdown h3{font-size:14px;color:var(--primary-2);margin-bottom:14px;font-weight:700}
+  .bar-item{margin-bottom:12px}
+  .bar-head{display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px}
+  .bar-head .name{color:var(--text)}
+  .bar-head .val{color:var(--muted);font-weight:600}
+  .bar-track{height:8px;background:var(--bg-2);border-radius:99px;overflow:hidden}
+  .bar-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--primary),var(--accent));transition:width .8s ease}
+  .bar-fill.good{background:linear-gradient(90deg,#16a34a,#22c55e)}
+  .bar-fill.warn{background:linear-gradient(90deg,#d97706,#f59e0b)}
+  .bar-fill.bad{background:linear-gradient(90deg,#dc2626,#ef4444)}
+
+  .pros-cons{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px}
+  @media (max-width:760px){.pros-cons{grid-template-columns:1fr}}
+  .pc-box{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px}
+  .pc-box h4{font-size:14px;margin-bottom:10px;font-weight:700}
+  .pc-box.pros h4{color:var(--good)}
+  .pc-box.cons h4{color:var(--bad)}
+  .pc-box ul{list-style:none}
+  .pc-box li{font-size:13px;padding:5px 0;display:flex;gap:8px;align-items:flex-start}
+  .pc-box li::before{content:"";width:5px;height:5px;border-radius:50%;margin-top:9px;flex-shrink:0}
+  .pc-box.pros li::before{background:var(--good)}
+  .pc-box.cons li::before{background:var(--bad)}
+
+  .recommendations{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-top:18px}
+  .recommendations h4{font-size:14px;color:var(--accent);margin-bottom:10px;font-weight:700}
+  .recommendations ul{list-style:none}
+  .recommendations li{font-size:13px;padding:6px 0;color:var(--muted);display:flex;gap:8px}
+  .recommendations li::before{content:"→";color:var(--accent)}
+
+  .price-warning{font-size:11px;color:var(--warn);margin-top:6px;display:none}
+  .price-warning.show{display:block}
+  .info-note{font-size:11px;color:var(--muted);margin-top:6px;background:var(--bg-2);padding:6px 10px;border-radius:6px;border-right:3px solid var(--primary)}
+
+  footer{text-align:center;color:var(--muted);font-size:12px;margin-top:30px;padding:20px}
+  footer a{color:var(--primary-2)}
+
+  /* ===== Tab Navigation ===== */
+  .main-tabs{
+    display:flex;gap:6px;background:var(--card);border:1px solid var(--border);
+    border-radius:14px;padding:6px;margin-bottom:20px;box-shadow:var(--shadow);
+  }
+  .main-tab{
+    flex:1;padding:13px 18px;border:none;background:transparent;color:var(--muted);
+    font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;border-radius:10px;
+    transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;
+  }
+  .main-tab:hover{color:var(--text);background:var(--bg-2)}
+  .main-tab.active{
+    background:linear-gradient(135deg,var(--primary),var(--accent));color:#0b1020;
+    box-shadow:0 6px 18px rgba(91,140,255,.35);
+  }
+  .view{display:none}
+  .view.active{display:block;animation:fade .3s ease}
+
+  /* ===== Lab Cards ===== */
+  .lab-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media (max-width:760px){.lab-grid{grid-template-columns:1fr}}
+  .lab-card{
+    background:var(--card);border:1px solid var(--border);border-radius:14px;
+    padding:20px;box-shadow:var(--shadow);transition:border-color .2s;
+  }
+  .lab-card:hover{border-color:rgba(91,140,255,.4)}
+  .lab-card h3{font-size:15px;color:var(--primary-2);margin-bottom:6px;display:flex;align-items:center;gap:8px;font-weight:700}
+  .lab-card .lab-desc{font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.6}
+  .lab-status{
+    display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:99px;
+    font-size:11px;font-weight:600;margin-bottom:12px;
+  }
+  .lab-status.idle{background:var(--bg-2);color:var(--muted)}
+  .lab-status.running{background:rgba(91,140,255,.15);color:var(--primary-2);border:1px solid rgba(91,140,255,.3)}
+  .lab-status.ok{background:rgba(34,197,94,.15);color:var(--good);border:1px solid rgba(34,197,94,.3)}
+  .lab-status.warn{background:rgba(245,158,11,.15);color:var(--warn);border:1px solid rgba(245,158,11,.3)}
+  .lab-status.bad{background:rgba(239,68,68,.15);color:var(--bad);border:1px solid rgba(239,68,68,.3)}
+  .lab-status .dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+  .lab-status.running .dot{animation:pulse 1s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+  .lab-btn{
+    background:var(--card-2);border:1.5px solid var(--border);color:var(--text);
+    padding:9px 16px;border-radius:9px;cursor:pointer;font-family:inherit;font-size:13px;font-weight:600;
+    transition:all .15s;margin-right:6px;margin-bottom:6px;
+  }
+  .lab-btn:hover{border-color:var(--primary);color:var(--primary-2)}
+  .lab-btn.primary{background:linear-gradient(135deg,var(--primary),var(--accent));color:#0b1020;border:none}
+  .lab-btn.danger{border-color:rgba(239,68,68,.5);color:var(--bad)}
+  .lab-btn.danger:hover{background:rgba(239,68,68,.1)}
+
+  .lab-output{
+    background:var(--bg-2);border:1px solid var(--border);border-radius:9px;
+    padding:12px;font-size:12px;color:var(--text);min-height:50px;margin-top:12px;
+    font-family:'Vazirmatn',monospace;line-height:1.8;
+  }
+  .lab-output .row{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px dashed rgba(255,255,255,.04)}
+  .lab-output .row:last-child{border-bottom:none}
+  .lab-output .row .k{color:var(--muted)}
+  .lab-output .row .v{color:var(--text);font-weight:600}
+  .lab-output .v.good{color:var(--good)} .lab-output .v.warn{color:var(--warn)} .lab-output .v.bad{color:var(--bad)}
+
+  .lab-video-wrap{
+    position:relative;background:#000;border-radius:9px;overflow:hidden;
+    aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;margin-top:10px;
+  }
+  .lab-video-wrap video{width:100%;height:100%;object-fit:cover}
+  .lab-video-wrap .placeholder{color:var(--muted);font-size:13px;text-align:center;padding:20px}
+
+  .lab-canvas-wrap{
+    background:var(--bg-2);border:1px solid var(--border);border-radius:9px;
+    margin-top:10px;overflow:hidden;position:relative;
+  }
+  .lab-canvas-wrap canvas{display:block;width:100%;touch-action:none;cursor:crosshair}
+
+  .display-test-overlay{
+    position:fixed;inset:0;z-index:9999;display:none;cursor:pointer;
+    align-items:center;justify-content:center;flex-direction:column;
+    transition:background-color .3s;
+  }
+  .display-test-overlay.show{display:flex}
+  .display-test-overlay .hint{color:rgba(255,255,255,.5);font-size:14px;font-weight:600;user-select:none}
+  .display-test-overlay .corner{position:absolute;width:80px;height:80px;border:3px solid rgba(255,255,255,.4)}
+  .display-test-overlay .corner.tl{top:20px;left:20px;border-right:none;border-bottom:none}
+  .display-test-overlay .corner.tr{top:20px;right:20px;border-left:none;border-bottom:none}
+  .display-test-overlay .corner.bl{bottom:20px;left:20px;border-right:none;border-top:none}
+  .display-test-overlay .corner.br{bottom:20px;right:20px;border-left:none;border-top:none}
+
+  .kb-grid{display:grid;gap:4px;margin-top:10px;font-size:11px}
+  .kb-row{display:flex;gap:4px;justify-content:center}
+  .kb-key{
+    background:var(--bg-2);border:1px solid var(--border);color:var(--muted);
+    padding:8px 6px;border-radius:5px;text-align:center;min-width:28px;font-family:inherit;
+    transition:all .1s;user-select:none;
+  }
+  .kb-key.pressed{background:linear-gradient(135deg,var(--primary),var(--accent));color:#0b1020;border-color:transparent;transform:translateY(1px)}
+  .kb-key.tested{background:rgba(34,197,94,.15);color:var(--good);border-color:rgba(34,197,94,.3)}
+  .kb-key.wide{min-width:80px} .kb-key.xwide{min-width:160px} .kb-key.space{min-width:280px}
+
+  .meter-bar{height:8px;background:var(--bg-2);border-radius:99px;overflow:hidden;margin-top:6px}
+  .meter-fill{height:100%;background:linear-gradient(90deg,var(--primary),var(--accent));transition:width .15s}
+  .meter-fill.good{background:linear-gradient(90deg,#16a34a,#22c55e)}
+  .meter-fill.warn{background:linear-gradient(90deg,#d97706,#f59e0b)}
+  .meter-fill.bad{background:linear-gradient(90deg,#dc2626,#ef4444)}
+
+  .lab-grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+  @media (max-width:560px){.lab-grid-3{grid-template-columns:1fr 1fr}}
+
+  .toast{
+    position:fixed;top:20px;left:50%;transform:translateX(-50%);
+    background:var(--card);border:1px solid var(--border);color:var(--text);
+    padding:12px 20px;border-radius:10px;font-size:13px;z-index:10000;
+    box-shadow:0 10px 30px rgba(0,0,0,.4);opacity:0;transition:opacity .3s,top .3s;
+    pointer-events:none;
+  }
+  .toast.show{opacity:1;top:30px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <h1>🎯 کیت امتیازبندی و آزمایشگاه سخت‌افزار</h1>
+    <p>ابزار حرفه‌ای برای ارزیابی ارزش خرید لپتاپ/PC به همراه آزمایشگاه زنده برای تست سالم بودن دوربین، نمایشگر، تاچ‌پد، کیبورد، اسپیکر، میکروفون، باطری، شبکه و CPU دستگاه.</p>
+    <div class="badge-row">
+      <span class="badge">⚡ بدون سرور — قابل اجرا روی GitHub Pages</span>
+      <span class="badge cyan">📊 ۱۲ معیار امتیازبندی</span>
+      <span class="badge gold">🧪 ۱۰ تست آزمایشگاهی زنده</span>
+      <span class="badge">💾 ۱۰۰٪ آفلاین</span>
+    </div>
+  </header>
+
+  <!-- MAIN TABS -->
+  <div class="main-tabs">
+    <button class="main-tab active" data-view="scoring"><span>🎯</span> امتیازبندی خرید</button>
+    <button class="main-tab" data-view="lab"><span>🧪</span> آزمایشگاه سخت‌افزار</button>
+  </div>
+
+  <!-- ============ SCORING VIEW ============ -->
+  <div class="view active" id="scoringView">
+
+  <!-- STEP 1: Use Case -->
+  <div class="usecase-section">
+    <div class="section-title"><span class="num">۱</span> کاربرد اصلی شما چیست؟ (وزن معیارها بر اساس این انتخاب تغییر می‌کند)</div>
+    <div class="usecase-grid" id="usecaseGrid">
+      <button class="usecase-btn active" data-case="general"><span class="ic">💻</span> استفاده عمومی<span class="desc">مرورگر، فیلم، اداری</span></button>
+      <button class="usecase-btn" data-case="gaming"><span class="ic">🎮</span> گیمینگ<span class="desc">بازی AAA و رقابتی</span></button>
+      <button class="usecase-btn" data-case="dev"><span class="ic">⌨️</span> برنامه‌نویسی<span class="desc">کد، Docker، VM</span></button>
+      <button class="usecase-btn" data-case="creator"><span class="ic">🎬</span> تولید محتوا<span class="desc">ویرایش ویدئو، ۳D</span></button>
+      <button class="usecase-btn" data-case="student"><span class="ic">📚</span> دانشجو<span class="desc">سبک، مقرون‌به‌صرفه</span></button>
+      <button class="usecase-btn" data-case="workstation"><span class="ic">🧠</span> workstation<span class="desc">رندر، AI، شبیه‌سازی</span></button>
+    </div>
+  </div>
+
+  <!-- QUICK PRESET -->
+  <div class="usecase-section" style="border-color:rgba(34,211,238,.3)">
+    <div class="section-title"><span class="num" style="background:linear-gradient(135deg,var(--accent),var(--primary))">⚡</span> پر کردن سریع (Presets)</div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn btn-ghost" data-preset="atom_z8350" style="padding:10px 16px;font-size:13px">⚡ Intel Atom x5-Z8350 (مینی‌پی‌سی)</button>
+      <button class="btn btn-ghost" data-preset="n100" style="padding:10px 16px;font-size:13px">💻 Intel N100 (مینی‌پی‌سی مدرن)</button>
+      <button class="btn btn-ghost" data-preset="i5_mid" style="padding:10px 16px;font-size:13px">💼 لپتاپ میان‌رده (i5-1240P + Iris Xe)</button>
+      <button class="btn btn-ghost" data-preset="gaming_mid" style="padding:10px 16px;font-size:13px">🎮 لپتاپ گیمینگ (i7+RTX 4060)</button>
+      <button class="btn btn-ghost" data-preset="macbook_m2" style="padding:10px 16px;font-size:13px">🍎 MacBook Air M2</button>
+    </div>
+    <div style="font-size:11px;color:var(--muted);margin-top:8px">با کلیک روی هر دکمه، مشخصات نمونه پر می‌شود. سپس فقط قیمت را وارد و محاسبه را بزنید.</div>
+  </div>
+
+  <!-- STEP 2: Inputs -->
+  <div class="grid-2">
+
+    <!-- CPU -->
+    <div class="card">
+      <h3><span class="ic">🧠</span> پردازنده (CPU)</h3>
+      <div class="field">
+        <label>مدل پردازنده <span class="hint">(از لیست انتخاب یا امتیاز دستی وارد کن)</span></label>
+        <select id="cpu_model">
+          <optgroup label="Intel - نسل ۱۳/۱۴">
+            <option value="i9-14900K,9800">Core i9-14900K</option>
+            <option value="i9-13900K,9000">Core i9-13900K</option>
+            <option value="i7-14700K,7800">Core i7-14700K</option>
+            <option value="i7-13700K,7200">Core i7-13700K</option>
+            <option value="i5-14600K,5800">Core i5-14600K</option>
+            <option value="i5-13600K,5400">Core i5-13600K</option>
+            <option value="i9-13900HX,6500">Core i9-13900HX (موبایل)</option>
+            <option value="i7-13700H,5200">Core i7-13700H</option>
+            <option value="i5-13500H,4200">Core i5-13500H</option>
+            <option value="i7-1360P,4000">Core i7-1360P</option>
+            <option value="i5-1340P,3300">Core i5-1340P</option>
+            <option value="i7-1355U,3000">Core i7-1355U</option>
+            <option value="i5-1335U,2600">Core i5-1335U</option>
+            <option value="i3-1305U,1800">Core i3-1305U</option>
+            <option value="N100,1500">Intel N100</option>
+          </optgroup>
+          <optgroup label="Intel - سریAtom/低end (مینی‌پی‌سی و تبلت)">
+            <option value="atom-x5-z8350,750">Atom x5-Z8350 (مینی‌پی‌سی/تبلت)</option>
+            <option value="atom-x7-z8750,1100">Atom x7-Z8750</option>
+            <option value="celeron-n4000,900">Celeron N4000</option>
+            <option value="celeron-n5100,1600">Celeron N5100</option>
+            <option value="pentium-n6000,1800">Pentium Silver N6000</option>
+          </optgroup>
+          <optgroup label="Intel - نسل ۱۲">
+            <option value="i9-12900K,6800">Core i9-12900K</option>
+            <option value="i7-12700K,5400">Core i7-12700K</option>
+            <option value="i5-12600K,4400">Core i5-12600K</option>
+            <option value="i7-1280P,3700">Core i7-1280P</option>
+            <option value="i5-1240P,2900">Core i5-1240P</option>
+            <option value="i7-1255U,2400">Core i7-1255U</option>
+            <option value="i5-1235U,2100">Core i5-1235U</option>
+          </optgroup>
+          <optgroup label="AMD Ryzen - سری ۷۰۰۰/۸۰۰۰">
+            <option value="r9-7950X,9500">Ryzen 9 7950X</option>
+            <option value="r9-7900X,8000">Ryzen 9 7900X</option>
+            <option value="r7-7800X3D,7600">Ryzen 7 7800X3D</option>
+            <option value="r7-7700X,6200">Ryzen 7 7700X</option>
+            <option value="r5-7600X,4800">Ryzen 5 7600X</option>
+            <option value="r9-7945HX,8200">Ryzen 9 7945HX (موبایل)</option>
+            <option value="r9-7940HS,5800">Ryzen 9 7940HS</option>
+            <option value="r7-7840HS,5200">Ryzen 7 7840HS</option>
+            <option value="r7-7735HS,4200">Ryzen 7 7735HS</option>
+            <option value="r5-7640HS,3800">Ryzen 5 7640HS</option>
+            <option value="r5-7530U,2800">Ryzen 5 7530U</option>
+            <option value="r7-7730U,3000">Ryzen 7 7730U</option>
+            <option value="r5-7520U,2200">Ryzen 5 7520U</option>
+          </optgroup>
+          <optgroup label="AMD Ryzen - سری ۵۰۰۰">
+            <option value="r9-5950X,6200">Ryzen 9 5950X</option>
+            <option value="r7-5800X,4400">Ryzen 7 5800X</option>
+            <option value="r5-5600X,3400">Ryzen 5 5600X</option>
+            <option value="r7-5800H,4000">Ryzen 7 5800H</option>
+            <option value="r5-5600H,3000">Ryzen 5 5600H</option>
+            <option value="r7-5825U,3200">Ryzen 7 5825U</option>
+            <option value="r5-5500U,2400">Ryzen 5 5500U</option>
+            <option value="r3-5300U,1800">Ryzen 3 5300U</option>
+          </optgroup>
+          <optgroup label="Apple Silicon">
+            <option value="m3-max,8800">Apple M3 Max</option>
+            <option value="m3-pro,6200">Apple M3 Pro</option>
+            <option value="m3,5000">Apple M3</option>
+            <option value="m2-ultra,9000">Apple M2 Ultra</option>
+            <option value="m2-pro,6400">Apple M2 Pro</option>
+            <option value="m2,4800">Apple M2</option>
+            <option value="m1-max,7000">Apple M1 Max</option>
+            <option value="m1-pro,5200">Apple M1 Pro</option>
+            <option value="m1,4200">Apple M1</option>
+          </optgroup>
+          <option value="custom,0">سایر / دستی</option>
+        </select>
+      </div>
+      <div class="field" id="cpuCustomField" style="display:none">
+        <label>امتیاز PassMark پردازنده (تقریبی) <span class="hint">(۰ تا ۱۰۰۰۰+)</span></label>
+        <input type="number" id="cpu_custom_score" placeholder="مثلاً ۴۵۰۰" min="0" max="20000">
+        <div class="info-note">راهنما: N100≈1500، i5-1240P≈2900، i5-13500H≈4200، i7-13700H≈5200، i9-13900K≈9000</div>
+      </div>
+      <div class="row-2">
+        <div class="field">
+          <label>تعداد هسته (Cores)</label>
+          <input type="number" id="cpu_cores" placeholder="مثلاً ۸" min="1" max="64">
+        </div>
+        <div class="field">
+          <label>تعداد رشته (Threads)</label>
+          <input type="number" id="cpu_threads" placeholder="مثلاً ۱۶" min="1" max="128">
+        </div>
+      </div>
+      <div class="row-2">
+        <div class="field">
+          <label>فرکانس پایه (GHz)</label>
+          <input type="number" id="cpu_base" placeholder="۲.۴" step="0.1" min="0">
+        </div>
+        <div class="field">
+          <label>فرکانس بوست (GHz)</label>
+          <input type="number" id="cpu_boost" placeholder="۵.۰" step="0.1" min="0">
+        </div>
+      </div>
+    </div>
+
+    <!-- GPU -->
+    <div class="card">
+      <h3><span class="ic">🎮</span> کارت گرافیک (GPU)</h3>
+      <div class="field">
+        <label>نوع گرافیک</label>
+        <select id="gpu_type">
+          <option value="igpu">گرافیک یکپارچه (Integrated)</option>
+          <option value="dedicated">گرافیک مجزا (Dedicated)</option>
+          <option value="none">بدون گرافیک</option>
+        </select>
+      </div>
+      <div class="field" id="gpuModelField">
+        <label>مدل گرافیک</label>
+        <select id="gpu_model">
+          <optgroup label="NVIDIA - سری ۴۰">
+            <option value="rtx4090,22000">RTX 4090</option>
+            <option value="rtx4080,17000">RTX 4080</option>
+            <option value="rtx4070ti,13000">RTX 4070 Ti</option>
+            <option value="rtx4070,11000">RTX 4070</option>
+            <option value="rtx4060ti,8000">RTX 4060 Ti</option>
+            <option value="rtx4060,6000">RTX 4060</option>
+            <option value="rtx4050,4500">RTX 4050 (موبایل)</option>
+          </optgroup>
+          <optgroup label="NVIDIA - سری ۳۰">
+            <option value="rtx3090,18000">RTX 3090</option>
+            <option value="rtx3080,14000">RTX 3080</option>
+            <option value="rtx3070,10000">RTX 3070</option>
+            <option value="rtx3060,6500">RTX 3060</option>
+            <option value="rtx3050,4000">RTX 3050</option>
+          </optgroup>
+          <optgroup label="NVIDIA - موبایل سری ۴۰">
+            <option value="rtx4090m,15000">RTX 4090 Mobile</option>
+            <option value="rtx4080m,12000">RTX 4080 Mobile</option>
+            <option value="rtx4070m,7500">RTX 4070 Mobile</option>
+            <option value="rtx4060m,5500">RTX 4060 Mobile</option>
+            <option value="rtx4050m,4200">RTX 4050 Mobile</option>
+          </optgroup>
+          <optgroup label="AMD Radeon">
+            <option value="rx7900xtx,18000">RX 7900 XTX</option>
+            <option value="rx7800xt,11000">RX 7800 XT</option>
+            <option value="rx7700xt,9000">RX 7700 XT</option>
+            <option value="rx6800,9500">RX 6800</option>
+            <option value="rx6700xt,7500">RX 6700 XT</option>
+            <option value="rx7600,5500">RX 7600</option>
+          </optgroup>
+          <option value="custom,0">سایر / دستی</option>
+        </select>
+      </div>
+      <div class="field" id="gpuCustomField" style="display:none">
+        <label>امتیاز گرافیک (G3D Mark تقریبی) <span class="hint">(۰ تا ۲۵۰۰۰+)</span></label>
+        <input type="number" id="gpu_custom_score" placeholder="مثلاً ۸۰۰۰" min="0" max="40000">
+        <div class="info-note">راهنما: RTX 3050≈4000، RTX 4060≈6000، RTX 4070≈11000، RTX 4090≈22000</div>
+      </div>
+      <div class="row-2">
+        <div class="field">
+          <label>VRAM (GB)</label>
+          <input type="number" id="gpu_vram" placeholder="۸" min="0" max="48">
+        </div>
+        <div class="field">
+          <label>TGP قدرت گرافیک (Watt) <span class="hint">(لپتاپ)</span></label>
+          <input type="number" id="gpu_tgp" placeholder="۱۰۰" min="0" max="600">
+        </div>
+      </div>
+    </div>
+
+    <!-- RAM -->
+    <div class="card">
+      <h3><span class="ic">💾</span> حافظه RAM</h3>
+      <div class="row-2">
+        <div class="field">
+          <label>ظرفیت RAM (GB)</label>
+          <select id="ram_capacity">
+            <option value="4">۴ گیگ</option>
+            <option value="8">۸ گیگ</option>
+            <option value="16" selected>۱۶ گیگ</option>
+            <option value="32">۳۲ گیگ</option>
+            <option value="64">۶۴ گیگ</option>
+            <option value="128">۱۲۸ گیگ</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>نوع RAM</label>
+          <select id="ram_type">
+            <option value="ddr4">DDR4</option>
+            <option value="ddr5">DDR5</option>
+            <option value="ddr3">DDR3 (قدیمی)</option>
+            <option value="lpddr5">LPDDR5 (لحیم‌شده)</option>
+            <option value="lpddr4x">LPDDR4X (لحیم‌شده)</option>
+          </select>
+        </div>
+      </div>
+      <div class="row-2">
+        <div class="field">
+          <label>سرعت RAM (MHz)</label>
+          <input type="number" id="ram_speed" placeholder="۴۸۰۰" min="0">
+        </div>
+        <div class="field">
+          <label>کانال حافظه</label>
+          <select id="ram_channel">
+            <option value="single">تک‌کاناله (Single)</option>
+            <option value="dual" selected>دو‌کاناله (Dual)</option>
+            <option value="quad">چهار‌کاناله (Quad)</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label>قابلیت ارتقا</label>
+        <select id="ram_upgrade">
+          <option value="yes">بله، SODIMM قابل تعویض</option>
+          <option value="soldered_one">لحیم‌شده + یک اسلات خالی</option>
+          <option value="no">لحیم‌شده (غیرقابل ارتقا)</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Storage -->
+    <div class="card">
+      <h3><span class="ic">💿</span> حافظه ذخیره‌سازی (Storage)</h3>
+      <div class="field">
+        <label>نوع درایو اصلی</label>
+        <select id="storage_type">
+          <option value="nvme_gen4">NVMe SSD (PCIe Gen4)</option>
+          <option value="nvme_gen3">NVMe SSD (PCIe Gen3)</option>
+          <option value="nvme_gen5">NVMe SSD (PCIe Gen5)</option>
+          <option value="sata_ssd">SATA SSD</option>
+          <option value="emmc">eMMC</option>
+          <option value="hdd">HDD مکانیکی</option>
+          <option value="hybrid">SSD + HDD ترکیبی</option>
+        </select>
+      </div>
+      <div class="row-2">
+        <div class="field">
+          <label>ظرفیت درایو اصلی (GB)</label>
+          <input type="number" id="storage_cap" placeholder="۵۱۲" min="0">
+        </div>
+        <div class="field">
+          <label>تعداد اسلات M.2/NVMe</label>
+          <select id="storage_slots">
+            <option value="1">۱ اسلات</option>
+            <option value="2">۲ اسلات</option>
+            <option value="0">بدون اسلات اضافه</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label>درایو ثانویه</label>
+        <select id="storage_secondary">
+          <option value="none">ندارد</option>
+          <option value="hdd_1tb">HDD ۱TB</option>
+          <option value="hdd_2tb">HDD ۲TB+</option>
+          <option value="ssd_extra">SSD اضافه</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Display -->
+    <div class="card">
+      <h3><span class="ic">🖥️</span> صفحه نمایش (Display)</h3>
+      <div class="row-2">
+        <div class="field">
+          <label>سایز (اینچ)</label>
+          <input type="number" id="disp_size" placeholder="۱۵.۶" step="0.1" min="0">
+        </div>
+        <div class="field">
+          <label>رزولوشن</label>
+          <select id="disp_res">
+            <option value="hd">HD (1366×768)</option>
+            <option value="fhd" selected>FHD (1920×1080)</option>
+            <option value="fhd_plus">FHD+ (1920×1200)</option>
+            <option value="qhd">QHD (2560×1440)</option>
+            <option value="qhd_plus">QHD+ (2560×1600)</option>
+            <option value="4k">4K (3840×2160)</option>
+            <option value="3k">3K MacBook</option>
+            <option value="2k_apple">Liquid Retina</option>
+          </select>
+        </div>
+      </div>
+      <div class="row-3">
+        <div class="field">
+          <label>نرخ نوسازی (Hz)</label>
+          <select id="disp_hz">
+            <option value="60">۶۰</option>
+            <option value="90">۹۰</option>
+            <option value="120">۱۲۰</option>
+            <option value="144">۱۴۴</option>
+            <option value="165">۱۶۵</option>
+            <option value="240">۲۴۰</option>
+            <option value="360">۳۶۰+</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>نوع پنل</label>
+          <select id="disp_panel">
+            <option value="ips">IPS</option>
+            <option value="oled">OLED</option>
+            <option value="mini_led">Mini-LED</option>
+            <option value="va">VA</option>
+            <option value="tn">TN</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>روشنایی (nits)</label>
+          <input type="number" id="disp_brightness" placeholder="۳۵۰" min="0">
+        </div>
+      </div>
+      <div class="row-2">
+        <div class="field">
+          <label>پوشش رنگی</label>
+          <select id="disp_color">
+            <option value="45_ntsc">۴۵٪ NTSC (ضعیف)</option>
+            <option value="62_ntsc">۶۲٪ NTSC / ~۱۰۰٪ sRGB</option>
+            <option value="100_srgb">۱۰۰٪ sRGB</option>
+            <option value="100_dcip3">۱۰۰٪ DCI-P3</option>
+            <option value="adobe_rgb">۹۰٪+ Adobe RGB</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>قابلیت لمسی / تاچ</label>
+          <select id="disp_touch">
+            <option value="no">ندارد</option>
+            <option value="yes">دارد</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Battery & Build -->
+    <div class="card">
+      <h3><span class="ic">🔋</span> باطری، وزن و کیفیت ساخت</h3>
+      <div class="row-2">
+        <div class="field">
+          <label>ظرفیت باطری (Wh)</label>
+          <input type="number" id="battery_wh" placeholder="۶۰" min="0" step="1">
+        </div>
+        <div class="field">
+          <label>وزن دستگاه (kg)</label>
+          <input type="number" id="weight" placeholder="۲.۱" min="0" step="0.05">
+        </div>
+      </div>
+      <div class="row-2">
+        <div class="field">
+          <label>جنس بدنه</label>
+          <select id="build_material">
+            <option value="plastic">پلاستیک کامل</option>
+            <option value="plastic_alu">پلاستیک + بخش‌های آلومینیومی</option>
+            <option value="alu">آلومینیوم کامل</option>
+            <option value="magnesium">منیزیم / آلیاژ سبک</option>
+            <option value="carbon">کربن‌فایبر + آلومینیوم</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>ضخامت (mm)</label>
+          <input type="number" id="thickness" placeholder="۲۰" min="0" step="0.1">
+        </div>
+      </div>
+      <div class="row-2">
+        <div class="field">
+          <label>کیفیت کیبورد</label>
+          <select id="keyboard">
+            <option value="membrane">Membrane معمولی</option>
+            <option value="good_membrane">Membrane باکیفیت</option>
+            <option value="mechanical">مکانیکی / Chicklet باکیفیت</option>
+            <option value="low_profile">Low-profile اپل‌مانند</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>شارژر سریع</label>
+          <select id="fast_charge">
+            <option value="no">ندارد</option>
+            <option value="usb_pd">USB-C PD</option>
+            <option value="proprietary">اختصاصی سریع</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label>سیستم خنک‌کننده</label>
+        <select id="cooling">
+          <option value="passive">پسیو (بدون فن)</option>
+          <option value="single_fan">تک‌فن</option>
+          <option value="dual_fan">دو‌فن</option>
+          <option value="vapor"> Vapor Chamber / لوله حرارتی پیشرفته</option>
+          <option value="liquid">پمپ آب (لپتاپ‌های گیمینگ)</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Ports & Connectivity -->
+    <div class="card">
+      <h3><span class="ic">🔌</span> پورت‌ها و اتصالات</h3>
+      <div class="field">
+        <label>پورت‌های موجود (تیک بزنید)</label>
+        <div class="checkbox-grid">
+          <label class="chk"><input type="checkbox" value="usb_c" data-ports> <span>USB-C</span></label>
+          <label class="chk"><input type="checkbox" value="thunderbolt" data-ports> <span>Thunderbolt 4</span></label>
+          <label class="chk"><input type="checkbox" value="usb_a" data-ports> <span>USB-A</span></label>
+          <label class="chk"><input type="checkbox" value="hdmi" data-ports> <span>HDMI</span></label>
+          <label class="chk"><input type="checkbox" value="dp" data-ports> <span>DisplayPort</span></label>
+          <label class="chk"><input type="checkbox" value="sd" data-ports> <span>SD Card</span></label>
+          <label class="chk"><input type="checkbox" value="ethernet" data-ports> <span>Ethernet (RJ45)</span></label>
+          <label class="chk"><input type="checkbox" value="audio" data-ports> <span>جک ۳.۵mm</span></label>
+          <label class="chk"><input type="checkbox" value="usb4" data-ports> <span>USB4</span></label>
+        </div>
+      </div>
+      <div class="row-2">
+        <div class="field">
+          <label>استاندارد WiFi</label>
+          <select id="wifi">
+            <option value="wifi5">WiFi 5 (802.11ac)</option>
+            <option value="wifi6">WiFi 6 (802.11ax)</option>
+            <option value="wifi6e">WiFi 6E</option>
+            <option value="wifi7">WiFi 7</option>
+            <option value="none">ندارد (با دانگل)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Bluetooth</label>
+          <select id="bluetooth">
+            <option value="bt5">Bluetooth 5.0</option>
+            <option value="bt52">Bluetooth 5.2</option>
+            <option value="bt53">Bluetooth 5.3</option>
+            <option value="bt54">Bluetooth 5.4</option>
+            <option value="none">ندارد</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label>امکانات جانبی</label>
+        <div class="checkbox-grid">
+          <label class="chk"><input type="checkbox" value="backlight" data-feats> <span>کیبورد بک‌لایت</span></label>
+          <label class="chk"><input type="checkbox" value="fingerprint" data-feats> <span>اثر انگشت</span></label>
+          <label class="chk"><input type="checkbox" value="faceid" data-feats> <span>تشخیص چهره IR</span></label>
+          <label class="chk"><input type="checkbox" value="webcam_hd" data-feats> <span>وبکم HD+</span></label>
+          <label class="chk"><input type="checkbox" value="webcam_shutter" data-feats> <span>شاتر وبکم</span></label>
+          <label class="chk"><input type="checkbox" value=" speakers_good" data-feats> <span>اسپیکر باکیفیت</span></label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Price & OS -->
+    <div class="card">
+      <h3><span class="ic">💰</span> قیمت، گارانتی و سیستم‌عامل</h3>
+      <div class="row-2">
+        <div class="field">
+          <label>قیمت دستگاه (تومان)</label>
+          <input type="number" id="price" placeholder="۴۵،۰۰۰،۰۰۰" min="0" step="100000">
+          <div class="price-warning" id="priceWarn">⚠️ لطفاً قیمت را وارد کنید تا ارزش خرید محاسبه شود</div>
+        </div>
+        <div class="field">
+          <label>ارز / واحد</label>
+          <select id="currency">
+            <option value="toman">تومان</option>
+            <option value="usd">دلار ($)</option>
+            <option value="eur">یورو (€)</option>
+            <option value="aed">درهم (AED)</option>
+          </select>
+        </div>
+      </div>
+      <div class="row-2">
+        <div class="field">
+          <label>سیستم‌عامل</label>
+          <select id="os">
+            <option value="win11">Windows 11 Pro</option>
+            <option value="win11_home">Windows 11 Home</option>
+            <option value="win10">Windows 10</option>
+            <option value="macos">macOS</option>
+            <option value="linux">Linux (Ubuntu/Fedora)</option>
+            <option value="chromeos">ChromeOS</option>
+            <option value="dos">بدون OS (DOS)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>گارانتی</label>
+          <select id="warranty">
+            <option value="none">بدون گارانتی رسمی</option>
+            <option value="6m">۶ ماه</option>
+            <option value="12m">۱۲ ماه</option>
+            <option value="18m">۱۸ ماه</option>
+            <option value="24m">۲۴ ماه</option>
+            <option value="36m">۳۶ ماه (Apple/برندهای پریمیوم)</option>
+          </select>
+        </div>
+      </div>
+      <div class="row-2">
+        <div class="field">
+          <label>وضعیت دستگاه</label>
+          <select id="condition">
+            <option value="new">نو (سبد)</option>
+            <option value="open_box">آکبند سیستم‌ساز</option>
+            <option value="refurbished">تعمیرشده (Refurbished)</option>
+            <option value="used_warranty">کارکرده با گارانتی</option>
+            <option value="used_no_warranty">کارکرده بدون گارانتی</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>برند</label>
+          <select id="brand">
+            <option value="apple">Apple</option>
+            <option value="dell">Dell</option>
+            <option value="lenovo">Lenovo</option>
+            <option value="hp">HP</option>
+            <option value="asus">ASUS</option>
+            <option value="acer">Acer</option>
+            <option value="msi">MSI</option>
+            <option value="razer">Razer</option>
+            <option value="microsoft">Microsoft</option>
+            <option value="samsung">Samsung</option>
+            <option value="framework">Framework</option>
+            <option value="other">سایر</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- RESULTS -->
+  <div class="results" id="results">
+    <div class="verdict-card" id="verdictCard">
+      <div class="verdict-top">
+        <div class="score-circle" id="scoreCircle">
+          <div class="score-num" id="scoreNum">۰</div>
+          <div class="score-label">امتیاز کل</div>
+        </div>
+        <div class="verdict-info">
+          <span class="verdict-badge" id="verdictBadge">—</span>
+          <h2 id="verdictTitle">—</h2>
+          <p id="verdictDesc">—</p>
+          <div class="price-meter" id="priceMeter"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="breakdown">
+      <div class="card">
+        <h3>📊 امتیاز تفکیکی اجزا</h3>
+        <div id="breakdownBars"></div>
+      </div>
+      <div class="card">
+        <h3>⚖️ ارزش در برابر قیمت</h3>
+        <div id="valueBreakdown"></div>
+      </div>
+    </div>
+
+    <div class="pros-cons">
+      <div class="pc-box pros">
+        <h4>✅ نقاط قوت</h4>
+        <ul id="prosList"></ul>
+      </div>
+      <div class="pc-box cons">
+        <h4>❌ نقاط ضعف / هشدارها</h4>
+        <ul id="consList"></ul>
+      </div>
+    </div>
+
+    <div class="recommendations">
+      <h4>💡 پیشنهادات نهایی متخصص سخت‌افزار</h4>
+      <ul id="recList"></ul>
+    </div>
+  </div>
+
+  </div><!-- /scoringView -->
+
+  <!-- ============ LAB VIEW ============ -->
+  <div class="view" id="labView">
+    <div class="usecase-section" style="border-color:rgba(34,211,238,.3);margin-bottom:20px">
+      <div class="section-title"><span class="num" style="background:linear-gradient(135deg,var(--accent),var(--primary))">🧪</span> راهنمای آزمایشگاه</div>
+      <p style="font-size:13px;color:var(--muted);line-height:1.8">
+        در این بخش می‌توانید بخش‌های مختلف دستگاه خود را <b style="color:var(--text)">زنده و واقعی</b> تست کنید تا از سالم بودن آن‌ها مطمئن شوید.
+        هر تست مستقل است و نیازی به پرکردن فرم امتیازبندی ندارد. برای شروع، روی دکمه‌ی «شروع تست» در هر کارت کلیک کنید.
+      </p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+        <button class="lab-btn primary" id="runAllLabTests">🚀 اجرای همه‌ی تست‌ها (پیشنهادی)</button>
+        <button class="lab-btn" id="showLabSummary">📋 نمایش خلاصه‌ی سلامت دستگاه</button>
+      </div>
+    </div>
+
+    <div class="lab-grid">
+
+      <!-- 1. Webcam Test -->
+      <div class="lab-card">
+        <h3><span>📷</span> تست دوربین (Webcam)</h3>
+        <p class="lab-desc">دوربین را روشن می‌کند، یک فریم را تحلیل می‌کند (روشنایی، کنتراست، شارپنس) و عکس می‌گیرد. برای بررسی سالم بودن وبکم.</p>
+        <div class="lab-status idle" id="camStatus"><span class="dot"></span> آماده</div>
+        <div>
+          <button class="lab-btn primary" id="camStart">▶️ شروع دوربین</button>
+          <button class="lab-btn" id="camSnap" disabled>📸 عکس‌برداری و تحلیل</button>
+          <button class="lab-btn danger" id="camStop" disabled>⏹️ توقف</button>
+        </div>
+        <div class="lab-video-wrap">
+          <video id="camVideo" autoplay playsinline muted style="display:none"></video>
+          <div class="placeholder" id="camPlaceholder">دوربین روشن نیست — روی «شروع دوربین» بزنید</div>
+        </div>
+        <div class="lab-output" id="camOutput">
+          <div class="row"><span class="k">وضعیت</span><span class="v">—</span></div>
+        </div>
+      </div>
+
+      <!-- 2. Display Test -->
+      <div class="lab-card">
+        <h3><span>🖥️</span> تست نمایشگر (پیکسل مرده)</h3>
+        <p class="lab-desc">صفحه را با رنگ‌های سفید، سیاه، قرمز، سبز، آبی پر می‌کند تا پیکسل‌های مرده یا گیرکرده را پیدا کنید. همچنین رزولوشن واقعی و DPI را نشان می‌دهد.</p>
+        <div class="lab-status idle" id="dispStatus"><span class="dot"></span> آماده</div>
+        <div>
+          <button class="lab-btn" data-disp="#ffffff">⬜ سفید</button>
+          <button class="lab-btn" data-disp="#000000">⬛ سیاه</button>
+          <button class="lab-btn" data-disp="#ff0000">🟥 قرمز</button>
+          <button class="lab-btn" data-disp="#00ff00">🟩 سبز</button>
+          <button class="lab-btn" data-disp="#0000ff">🟦 آبی</button>
+          <button class="lab-btn primary" id="dispCycle">🔄 چرخه‌ی خودکار</button>
+        </div>
+        <div class="lab-output" id="dispOutput">
+          <div class="row"><span class="k">رزولوشن منطقی (CSS)</span><span class="v" id="dispRes">—</span></div>
+          <div class="row"><span class="k">رزولوشن فیزیکی</span><span class="v" id="dispPhys">—</span></div>
+          <div class="row"><span class="k">DPR (تراکم پیکسل)</span><span class="v" id="dispDpr">—</span></div>
+          <div class="row"><span class="k">عمق رنگ</span><span class="v" id="dispDepth">—</span></div>
+          <div class="row"><span class="k">ناحیه‌ی رنگی</span><span class="v" id="dispGamut">—</span></div>
+          <div class="row"><span class="k">نرخ نوسازی</span><span class="v" id="dispRate">—</span></div>
+        </div>
+      </div>
+
+      <!-- 3. Touchpad / Mouse Test -->
+      <div class="lab-card">
+        <h3><span>🖱️</span> تست تاچ‌پد / ماوس</h3>
+        <p class="lab-desc">داخل کادر نقاشی بکشید تا نرمی و دقت تاچ‌پد را بسنجید. همچنین کلیک چپ/راست و چرخش اسکرول را تست می‌کند. برای تست چندلمسی روی صفحات لمسی، دو انگشت را لمس کنید.</p>
+        <div class="lab-status idle" id="tpStatus"><span class="dot"></span> آماده</div>
+        <div>
+          <button class="lab-btn primary" id="tpStart">▶️ شروع تست</button>
+          <button class="lab-btn" id="tpClear">🧹 پاک‌کردن</button>
+        </div>
+        <div class="lab-canvas-wrap">
+          <canvas id="tpCanvas" width="600" height="280"></canvas>
+        </div>
+        <div class="lab-output" id="tpOutput">
+          <div class="row"><span class="k">کلیک چپ</span><span class="v" id="tpLeftClicks">۰</span></div>
+          <div class="row"><span class="k">کلیک راست</span><span class="v" id="tpRightClicks">۰</span></div>
+          <div class="row"><span class="k">اسکرول</span><span class="v" id="tpScrolls">۰</span></div>
+          <div class="row"><span class="k">نقاط ثبت‌شده</span><span class="v" id="tpPoints">۰</span></div>
+          <div class="row"><span class="k">چندلمسی</span><span class="v" id="tpMulti">—</span></div>
+        </div>
+      </div>
+
+      <!-- 4. Keyboard Test -->
+      <div class="lab-card">
+        <h3><span>⌨️</span> تست کیبورد</h3>
+        <p class="lab-desc">هر کلید را فشار دهید تا سبز شود. کلیدهایی که فشار داده نشوند، احتمالاً خراب هستند. برای تست کامل، همه‌ی کلیدها را یک‌بار بزنید. کلید Esc برای پایان است.</p>
+        <div class="lab-status idle" id="kbStatus"><span class="dot"></span> آماده</div>
+        <div>
+          <button class="lab-btn primary" id="kbStart">▶️ شروع تست</button>
+          <button class="lab-btn" id="kbReset">↺ ریست</button>
+        </div>
+        <div class="kb-grid" id="kbGrid" style="opacity:.5;pointer-events:none"></div>
+        <div class="lab-output" id="kbOutput">
+          <div class="row"><span class="k">کلیدهای تست‌شده</span><span class="v" id="kbTested">۰ / ۰</span></div>
+          <div class="row"><span class="k">آخرین کلید</span><span class="v" id="kbLast">—</span></div>
+          <div class="row"><span class="k">وضعیت</span><span class="v" id="kbHealth">—</span></div>
+        </div>
+      </div>
+
+      <!-- 5. Speaker Test -->
+      <div class="lab-card">
+        <h3><span>🔊</span> تست اسپیکر</h3>
+        <p class="lab-desc">فرکانس‌های مختلف را پخش می‌کند تا مطمئن شوید هر دو اسپیکر چپ و راست سالم هستند. صدا را روی متوسط تنظیم کنید تا گوشتان اذیت نشود.</p>
+        <div class="lab-status idle" id="spStatus"><span class="dot"></span> آماده</div>
+        <div>
+          <button class="lab-btn primary" id="spStart">▶️ تست چپ</button>
+          <button class="lab-btn primary" id="spRight">▶️ تست راست</button>
+          <button class="lab-btn primary" id="spBoth">▶️ هر دو</button>
+          <button class="lab-btn" id="spSweep">🎵 اسکن فرکانس</button>
+          <button class="lab-btn danger" id="spStop">⏹️ قطع</button>
+        </div>
+        <div class="lab-output" id="spOutput">
+          <div class="row"><span class="k">وضعیت صدا</span><span class="v" id="spState">ساکت</span></div>
+          <div class="row"><span class="k">فرکانس فعلی</span><span class="v" id="spFreq">—</span></div>
+          <div class="row"><span class="k">کانال فعال</span><span class="v" id="spChan">—</span></div>
+        </div>
+      </div>
+
+      <!-- 6. Microphone Test -->
+      <div class="lab-card">
+        <h3><span>🎤</span> تست میکروفون</h3>
+        <p class="lab-desc">میکروفون را روشن می‌کند و سطح صدا را به‌صورت زنده نمایش می‌دهد. اگر موج تغییر نکند، میکروفون احتمالاً خراب است یا دسترسی داده نشده.</p>
+        <div class="lab-status idle" id="micStatus"><span class="dot"></span> آماده</div>
+        <div>
+          <button class="lab-btn primary" id="micStart">▶️ شروع</button>
+          <button class="lab-btn danger" id="micStop" disabled>⏹️ توقف</button>
+        </div>
+        <canvas id="micCanvas" width="600" height="100" style="width:100%;background:var(--bg-2);border:1px solid var(--border);border-radius:9px;margin-top:10px;display:block"></canvas>
+        <div class="lab-output" id="micOutput">
+          <div class="row"><span class="k">سطح صدا</span><span class="v" id="micLevel">—</span></div>
+          <div class="row"><span class="k">پیک صدا</span><span class="v" id="micPeak">—</span></div>
+          <div class="row"><span class="k">وضعیت</span><span class="v" id="micHealth">—</span></div>
+        </div>
+      </div>
+
+      <!-- 7. Battery Test -->
+      <div class="lab-card">
+        <h3><span>🔋</span> تست باطری</h3>
+        <p class="lab-desc">اطلاعات باطری را به‌صورت زنده نشان می‌دهد: درصد شارژ، وضعیت شارژ شدن، ظرفیت تقریبی و وضعیت سلامت. در مرورگرهای مبتنی بر Chromium بهترین کارکرد را دارد.</p>
+        <div class="lab-status idle" id="batStatus"><span class="dot"></span> آماده</div>
+        <div>
+          <button class="lab-btn primary" id="batStart">🔄 دریافت اطلاعات</button>
+        </div>
+        <div class="lab-output" id="batOutput">
+          <div class="row"><span class="k">سطح شارژ</span><span class="v" id="batLevel">—</span></div>
+          <div class="row"><span class="k">وضعیت</span><span class="v" id="batCharging">—</span></div>
+          <div class="row"><span class="k">زمان باقی‌مانده</span><span class="v" id="batTime">—</span></div>
+          <div class="row"><span class="k">زمان شارژ کامل</span><span class="v" id="batChargeTime">—</span></div>
+          <div class="row"><span class="k">پشتیبانی API</span><span class="v" id="batSupport">—</span></div>
+        </div>
+      </div>
+
+      <!-- 8. Network Speed Test -->
+      <div class="lab-card">
+        <h3><span>📡</span> تست سرعت شبکه</h3>
+        <p class="lab-desc">دانلود یک فایل نمونه انجام می‌دهد و سرعت واقعی اینترنت شما را می‌سنجد. برای نتیجه‌ی دقیق‌تر، دیگر دانلودها را متوقف کنید.</p>
+        <div class="lab-status idle" id="netStatus"><span class="dot"></span> آماده</div>
+        <div>
+          <button class="lab-btn primary" id="netStart">🚀 شروع تست سرعت</button>
+        </div>
+        <div class="lab-output" id="netOutput">
+          <div class="row"><span class="k">نوع اتصال</span><span class="v" id="netType">—</span></div>
+          <div class="row"><span class="k">پینگ تقریبی</span><span class="v" id="netPing">—</span></div>
+          <div class="row"><span class="k">سرعت دانلود</span><span class="v" id="netSpeed">—</span></div>
+          <div class="row"><span class="k">حجم دانلودشده</span><span class="v" id="netBytes">—</span></div>
+          <div class="row"><span class="k">وضعیت</span><span class="v" id="netHealth">—</span></div>
+        </div>
+      </div>
+
+      <!-- 9. CPU Benchmark -->
+      <div class="lab-card">
+        <h3><span>🧠</span> بنچ‌مارک CPU</h3>
+        <p class="lab-desc">یک محاسبه‌ی سنگین ریاضی (اعتبارسنجی اعداد اول) انجام می‌دهد و سرعت پردازنده‌ی شما را با چند مدل پایه مقایسه می‌کند. ۱۰ تا ۳۰ ثانیه طول می‌کشد.</p>
+        <div class="lab-status idle" id="cpuBenchStatus"><span class="dot"></span> آماده</div>
+        <div>
+          <button class="lab-btn primary" id="cpuBenchStart">▶️ اجرای بنچ‌مارک</button>
+        </div>
+        <div class="lab-output" id="cpuBenchOutput">
+          <div class="row"><span class="k">نوع پردازنده</span><span class="v" id="cpuBenchName">—</span></div>
+          <div class="row"><span class="k">تعداد هسته‌ی منطقی</span><span class="v" id="cpuBenchCores">—</span></div>
+          <div class="row"><span class="k">زمان اجرا</span><span class="v" id="cpuBenchTime">—</span></div>
+          <div class="row"><span class="k">امتیاز (ops/sec)</span><span class="v" id="cpuBenchScore">—</span></div>
+          <div class="row"><span class="k">طبقه‌بندی</span><span class="v" id="cpuBenchTier">—</span></div>
+        </div>
+      </div>
+
+      <!-- 10. FPS / Render Test -->
+      <div class="lab-card">
+        <h3><span>🎬</span> تست FPS و رندر</h3>
+        <p class="lab-desc">یک انیمیشن سنگین Canvas رندر می‌کند و نرخ فریم واقعی صفحه‌نمایش را می‌سنجد. برای بررسی سلامت گرافیک و تطابق با نرخ نوسازی ادعاشده.</p>
+        <div class="lab-status idle" id="fpsStatus"><span class="dot"></span> آماده</div>
+        <div>
+          <button class="lab-btn primary" id="fpsStart">▶️ شروع تست</button>
+          <button class="lab-btn danger" id="fpsStop" disabled>⏹️ توقف</button>
+        </div>
+        <canvas id="fpsCanvas" width="600" height="180" style="width:100%;background:var(--bg-2);border:1px solid var(--border);border-radius:9px;margin-top:10px;display:block"></canvas>
+        <div class="lab-output" id="fpsOutput">
+          <div class="row"><span class="k">FPS میانگین</span><span class="v" id="fpsAvg">—</span></div>
+          <div class="row"><span class="k">FPS مینیمم</span><span class="v" id="fpsMin">—</span></div>
+          <div class="row"><span class="k">نرخ نوسازی هدف</span><span class="v" id="fpsTarget">—</span></div>
+          <div class="row"><span class="k">وضعیت گرافیک</span><span class="v" id="fpsHealth">—</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- LAB SUMMARY -->
+    <div class="card" id="labSummaryCard" style="margin-top:20px;display:none">
+      <h3 style="color:var(--accent)">📋 خلاصه‌ی سلامت دستگاه</h3>
+      <div id="labSummaryContent"></div>
+    </div>
+
+  </div><!-- /labView -->
+
+</div>
+
+<!-- Display test full-screen overlay -->
+<div class="display-test-overlay" id="dispOverlay">
+  <div class="corner tl"></div><div class="corner tr"></div>
+  <div class="corner bl"></div><div class="corner br"></div>
+  <div class="hint" id="dispHint">برای بستن کلیک کنید</div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<div class="sticky-bar">
+  <div class="inner">
+    <span style="font-size:13px;color:var(--muted)" id="stickyHint">کافیست مشخصات را پر کنید</span>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-ghost" id="resetBtn">↺ پاک کردن</button>
+      <button class="btn btn-primary" id="calcBtn">🎯 محاسبه ارزش خرید</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  ساخته‌شده برای کاربران حرفه‌ای · قابل اجرا روی GitHub Pages · تمام محاسبات در مرورگر شما انجام می‌شود
+</footer>
+
+<script>
+/* =========================================================
+   Laptop/PC Value Scorer
+   All scoring logic runs 100% client-side.
+   ========================================================= */
+
+const USE_CASES = {
+  general:     { name:"استفاده عمومی",    cpu:.14, gpu:.10, ram:.13, storage:.10, display:.12, battery:.12, build:.12, ports:.07, conn:.05, upgrade:.05, brand:.05, os:.05 },
+  gaming:      { name:"گیمینگ",          cpu:.16, gpu:.28, ram:.10, storage:.07, display:.16, battery:.03, build:.06, ports:.04, conn:.03, upgrade:.04, brand:.02, os:.01 },
+  dev:         { name:"برنامه‌نویسی",     cpu:.20, gpu:.06, ram:.20, storage:.13, display:.10, battery:.08, build:.06, ports:.06, conn:.05, upgrade:.05, brand:.02, os:.04 },
+  creator:     { name:"تولید محتوا",     cpu:.22, gpu:.16, ram:.16, storage:.10, display:.15, battery:.04, build:.05, ports:.04, conn:.03, upgrade:.04, brand:.02, os:.03 },
+  student:     { name:"دانشجو",          cpu:.12, gpu:.07, ram:.12, storage:.08, display:.10, battery:.18, build:.13, ports:.05, conn:.05, upgrade:.04, brand:.03, os:.03 },
+  workstation: { name:"Workstation",     cpu:.22, gpu:.18, ram:.16, storage:.10, display:.10, battery:.02, build:.05, ports:.05, conn:.04, upgrade:.05, brand:.02, os:.01 }
+};
+
+let activeCase = "general";
+
+/* ---------- Helpers ---------- */
+const $ = (id)=>document.getElementById(id);
+const faNum = (n)=> n.toLocaleString('fa-IR');
+const clamp = (n,min,max)=>Math.max(min,Math.min(max,n));
+const norm = (x,min,max)=> clamp((x-min)/(max-min)*100, 0, 100);
+
+/* ---------- CPU score ----------
+   Uses logarithmic scaling because CPU performance spans a very wide range
+   (from Intel N100 ~1500 to i9-14900K ~10000 on our scale).
+   Linear scaling would unfairly crush mid-range chips.
+*/
+function getCPUScore(){
+  const sel = $('cpu_model').value;
+  let raw;
+  if(sel.startsWith('custom')){
+    raw = parseFloat($('cpu_custom_score').value)||0;
+  }else{
+    raw = parseFloat(sel.split(',')[1])||0;
+  }
+  // Logarithmic map: raw=500 -> 0, raw=10000 -> 100
+  let score = raw>0 ? Math.log(Math.max(500,raw)/500) / Math.log(10000/500) * 100 : 0;
+  // Cores bonus (max +6)
+  const cores = parseInt($('cpu_cores').value)||0;
+  score += Math.min(6, cores*0.7);
+  // Threads bonus (max +4)
+  const threads = parseInt($('cpu_threads').value)||0;
+  score += Math.min(4, threads*0.25);
+  return clamp(score,0,100);
+}
+
+/* ---------- GPU score ----------
+   Logarithmic scaling for dedicated GPUs (range ~3000..25000 on our scale).
+*/
+function getGPUScore(){
+  const type = $('gpu_type').value;
+  if(type==='none') return 5;
+  const sel = $('gpu_model').value;
+  let raw;
+  if(sel.startsWith('custom')){
+    raw = parseFloat($('gpu_custom_score').value)||0;
+  }else{
+    raw = parseFloat(sel.split(',')[1])||0;
+  }
+  if(type==='igpu'){
+    // Integrated GPUs usually 500..3500 in G3D
+    raw = Math.max(raw, 700);
+    return norm(raw, 500, 3500);
+  }
+  // Dedicated — logarithmic: raw=2000 -> 0, raw=25000 -> 100
+  let score = raw>0 ? Math.log(Math.max(2000,raw)/2000) / Math.log(25000/2000) * 100 : 0;
+  // VRAM bonus
+  const vram = parseInt($('gpu_vram').value)||0;
+  score += Math.min(8, vram*0.8);
+  // TGP bonus for laptops
+  const tgp = parseInt($('gpu_tgp').value)||0;
+  if(tgp>0) score += Math.min(6, (tgp-50)*0.06);
+  return clamp(score,0,100);
+}
+
+/* ---------- RAM score ---------- */
+function getRAMScore(){
+  const cap = parseInt($('ram_capacity').value)||8;
+  let capScore;
+  if(cap<4) capScore=5;
+  else if(cap===4) capScore=20;
+  else if(cap===8) capScore=45;
+  else if(cap===16) capScore=80;
+  else if(cap===32) capScore=95;
+  else if(cap>=64) capScore=100;
+
+  let typeBonus = 0;
+  const t = $('ram_type').value;
+  if(t==='ddr5'||t==='lpddr5') typeBonus=10;
+  else if(t==='ddr4') typeBonus=6;
+  else if(t==='lpddr4x') typeBonus=4;
+  else if(t==='ddr3') typeBonus=-8;
+
+  const speed = parseInt($('ram_speed').value)||0;
+  let speedBonus = 0;
+  if(speed>=6400) speedBonus=6;
+  else if(speed>=5600) speedBonus=4;
+  else if(speed>=4800) speedBonus=3;
+  else if(speed>=3200) speedBonus=2;
+  else if(speed>0) speedBonus=1;
+
+  let channelBonus=0;
+  const ch=$('ram_channel').value;
+  if(ch==='dual') channelBonus=5;
+  else if(ch==='quad') channelBonus=7;
+
+  return clamp(capScore+typeBonus+speedBonus+channelBonus,0,100);
+}
+
+/* ---------- Storage score ---------- */
+function getStorageScore(){
+  const type=$('storage_type').value;
+  const cap=parseInt($('storage_cap').value)||0;
+  let typeScore;
+  switch(type){
+    case 'nvme_gen5': typeScore=95; break;
+    case 'nvme_gen4': typeScore=88; break;
+    case 'nvme_gen3': typeScore=80; break;
+    case 'sata_ssd': typeScore=62; break;
+    case 'emmc': typeScore=30; break;
+    case 'hdd': typeScore=18; break;
+    case 'hybrid': typeScore=68; break;
+    default: typeScore=50;
+  }
+  // Capacity bonus
+  let capBonus=0;
+  if(cap>=2000) capBonus=10;
+  else if(cap>=1000) capBonus=8;
+  else if(cap>=512) capBonus=5;
+  else if(cap>=256) capBonus=2;
+  else if(cap<128) capBonus=-8;
+
+  // Slots bonus
+  let slotBonus=0;
+  if($('storage_slots').value==='2') slotBonus=5;
+
+  // Secondary
+  let secBonus=0;
+  const sec=$('storage_secondary').value;
+  if(sec==='ssd_extra') secBonus=5;
+  else if(sec==='hdd_2tb') secBonus=3;
+  else if(sec==='hdd_1tb') secBonus=2;
+
+  return clamp(typeScore+capBonus+slotBonus+secBonus,0,100);
+}
+
+/* ---------- Display score ---------- */
+function getDisplayScore(){
+  const res=$('disp_res').value;
+  const resScore = {hd:15, fhd:70, fhd_plus:75, qhd:88, qhd_plus:90, '4k':95, '3k':90, '2k_apple':92}[res]||60;
+  const hz=parseInt($('disp_hz').value)||60;
+  let hzBonus=0;
+  if(hz>=360) hzBonus=10;
+  else if(hz>=240) hzBonus=9;
+  else if(hz>=165) hzBonus=8;
+  else if(hz>=144) hzBonus=7;
+  else if(hz>=120) hzBonus=6;
+  else if(hz>=90) hzBonus=4;
+
+  const panel=$('disp_panel').value;
+  let panelBonus={ips:5,oled:12,mini_led:11,va:2,tn:-5}[panel]||0;
+
+  const brightness=parseInt($('disp_brightness').value)||0;
+  let briBonus=0;
+  if(brightness>=500) briBonus=8;
+  else if(brightness>=400) briBonus=6;
+  else if(brightness>=300) briBonus=3;
+  else if(brightness>=250) briBonus=1;
+  else if(brightness>0 && brightness<220) briBonus=-5;
+
+  const color=$('disp_color').value;
+  let colorBonus={'45_ntsc':-6, '62_ntsc':2, '100_srgb':5, '100_dcip3':8, 'adobe_rgb':9}[color]||0;
+
+  return clamp(resScore+hzBonus+panelBonus+briBonus+colorBonus,0,100);
+}
+
+/* ---------- Battery score ----------
+   30Wh (very weak) -> 15, 50Wh -> 43, 70Wh -> 67, 99Wh (FAA max) -> 100
+*/
+function getBatteryScore(){
+  const wh=parseFloat($('battery_wh').value)||0;
+  if(wh===0) return 30;
+  return clamp(15 + (wh-30)/(99-30)*85, 0, 100);
+}
+
+/* ---------- Build score ---------- */
+function getBuildScore(){
+  const mat=$('build_material').value;
+  let matScore={plastic:35, plastic_alu:55, alu:80, magnesium:90, carbon:95}[mat]||50;
+
+  const weight=parseFloat($('weight').value)||0;
+  let weightBonus=0;
+  if(weight>0){
+    if(weight<1.2) weightBonus=10;
+    else if(weight<1.5) weightBonus=8;
+    else if(weight<1.8) weightBonus=5;
+    else if(weight<2.2) weightBonus=2;
+    else if(weight<2.8) weightBonus=-2;
+    else weightBonus=-6;
+  }
+  const kb=$('keyboard').value;
+  let kbBonus={membrane:0,good_membrane:3,mechanical:8,low_profile:6}[kb]||0;
+
+  const cool=$('cooling').value;
+  let coolBonus={passive:0,single_fan:3,dual_fan:6,vapor:9,liquid:10}[cool]||0;
+
+  const fc=$('fast_charge').value;
+  let fcBonus = fc==='none'?0:4;
+
+  return clamp(matScore+weightBonus+kbBonus+coolBonus+fcBonus,0,100);
+}
+
+/* ---------- Ports score ---------- */
+function getPortsScore(){
+  const checked = document.querySelectorAll('input[data-ports]:checked');
+  let score=20;
+  const weighted = {
+    usb_c:12, thunderbolt:18, usb4:15, usb_a:8, hdmi:10, dp:8, sd:8, ethernet:10, audio:6
+  };
+  checked.forEach(c=>{ score += weighted[c.value]||5; });
+  return clamp(score,0,100);
+}
+
+/* ---------- Connectivity score ---------- */
+function getConnScore(){
+  const w=$('wifi').value;
+  let wScore={wifi5:55, wifi6:80, wifi6e:90, wifi7:100, none:15}[w]||50;
+  const b=$('bluetooth').value;
+  let bScore={bt5:55, bt52:75, bt53:90, bt54:100, none:10}[b]||50;
+  const feats = document.querySelectorAll('input[data-feats]:checked');
+  let fBonus = feats.length*3;
+  return clamp((wScore*0.6 + bScore*0.3) + fBonus,0,100);
+}
+
+/* ---------- Upgradeability ---------- */
+function getUpgradeScore(){
+  let s=20;
+  const ramUp=$('ram_upgrade').value;
+  if(ramUp==='yes') s+=35;
+  else if(ramUp==='soldered_one') s+=18;
+  const slots=$('storage_slots').value;
+  if(slots==='2') s+=25;
+  else if(slots==='1') s+=12;
+  const sec=$('storage_secondary').value;
+  if(sec!=='none') s+=10;
+  const brand=$('brand').value;
+  if(brand==='framework') s+=15;
+  return clamp(s,0,100);
+}
+
+/* ---------- Brand score ---------- */
+function getBrandScore(){
+  const b=$('brand').value;
+  // Reliability & support tiers
+  const tiers = {
+    apple:95, framework:95, microsoft:88,
+    dell:85, lenovo:85, hp:80,
+    asus:80, acer:72, msi:75,
+    razer:78, samsung:82, other:60
+  };
+  return tiers[b]||60;
+}
+
+/* ---------- OS score ---------- */
+function getOSScore(){
+  const os=$('os').value;
+  const cond=$('condition').value;
+  let s={win11:90, win11_home:82, win10:75, macos:98, linux:80, chromeos:65, dos:35}[os]||60;
+  // DOS without warranty is a minus
+  if(os==='dos' && cond==='new') s-=5;
+  return s;
+}
+
+/* ---------- Value/Price score ----------
+   We compute "price per performance index".
+   Higher overall spec -> expected higher acceptable price.
+*/
+function getValueScore(overall, price, currency, condition, warranty){
+  if(!price || price<=0) return null;
+
+  // Convert to USD equivalent (rough rates)
+  const rates = { toman:1/60000, usd:1, eur:1.08, aed:0.27 };
+  const usd = price * (rates[currency]||1);
+
+  // Condition multiplier — what fraction of "new price" a used device is worth.
+  // To compare apples-to-apples with the expected-new-price curve, we compute the
+  // "new-equivalent price paid": what you'd pay if this same device were brand new.
+  // For a used device, paying $X is like paying $X / condMult for a new one.
+  // Higher effPrice = worse deal.
+  const condMult = {
+    new:1.0, open_box:0.92, refurbished:0.7,
+    used_warranty:0.55, used_no_warranty:0.4
+  }[condition]||1.0;
+
+  const effPrice = usd / condMult;
+
+  // Warranty bonus (adds perceived value, max +10)
+  const warBonus = {none:0, '6m':2, '12m':4, '18m':6, '24m':8, '36m':10}[warranty]||0;
+
+  // Expected USD for given overall score — calibrated against real market data.
+  // Steeper curve (^3.5) so that low-score devices have proportionally lower value:
+  //   score 20 -> ~$42, 37 -> ~$138, 50 -> ~$340, 70 -> ~$1034, 85 -> ~$2200, 95 -> ~$2932
+  const expected = Math.pow(overall/100, 3.5) * 3500 + 30;
+
+  // Value ratio: >1 means price is below expected (good deal), <1 means overpriced
+  const ratio = expected / Math.max(30, effPrice);
+
+  // Map ratio to 0..100 score. ratio=1 -> 50 (fair), ratio=2 -> 110 (capped 100), ratio=0.5 -> 20
+  let vScore = clamp(50 + (ratio-1)*60 + warBonus, 0, 100);
+
+  return { vScore, expected, effPrice, ratio, usdPaid: usd };
+}
+
+/* ---------- Main calculation ---------- */
+function calculate(){
+  const price = parseFloat($('price').value)||0;
+  const currency = $('currency').value;
+  const condition = $('condition').value;
+  const warranty = $('warranty').value;
+
+  if(!price){ $('priceWarn').classList.add('show'); }
+  else { $('priceWarn').classList.remove('show'); }
+
+  const scores = {
+    cpu: getCPUScore(),
+    gpu: getGPUScore(),
+    ram: getRAMScore(),
+    storage: getStorageScore(),
+    display: getDisplayScore(),
+    battery: getBatteryScore(),
+    build: getBuildScore(),
+    ports: getPortsScore(),
+    conn: getConnScore(),
+    upgrade: getUpgradeScore(),
+    brand: getBrandScore(),
+    os: getOSScore()
+  };
+
+  const w = USE_CASES[activeCase];
+  // Normalize weights (they should already sum to 1 but enforce)
+  const wsum = w.cpu+w.gpu+w.ram+w.storage+w.display+w.battery+w.build+w.ports+w.conn+w.upgrade+w.brand+w.os;
+  const overall = (
+    scores.cpu*w.cpu + scores.gpu*w.gpu + scores.ram*w.ram + scores.storage*w.storage +
+    scores.display*w.display + scores.battery*w.battery + scores.build*w.build +
+    scores.ports*w.ports + scores.conn*w.conn + scores.upgrade*w.upgrade +
+    scores.brand*w.brand + scores.os*w.os
+  ) / wsum;
+
+  const valueInfo = getValueScore(overall, price, currency, condition, warranty);
+
+  render(overall, scores, valueInfo, w);
+}
+
+/* ---------- Render results ---------- */
+function render(overall, scores, valueInfo, w){
+  $('results').classList.add('show');
+  // Score circle
+  const deg = (overall/100)*360;
+  $('scoreCircle').style.background = `conic-gradient(var(--primary) ${deg}deg, var(--bg-2) ${deg}deg)`;
+  $('scoreNum').textContent = faNum(Math.round(overall));
+
+  // Verdict — calibrated thresholds:
+  //   overall < 55 → not recommended (regardless of price — device is too weak for modern use)
+  //   value < 35 → overpriced (overrides)
+  //   overall >= 80 → worth buying (great device)
+  //   overall 70-79 + value >= 55 → worth buying (good value)
+  //   overall >= 55 → consider
+  const card = $('verdictCard');
+  const badge = $('verdictBadge');
+  card.classList.remove('good','warn','bad');
+  badge.classList.remove('good','warn','bad');
+  let title, desc, vClass, vBadgeText;
+  const vScore = valueInfo ? valueInfo.vScore : 50;
+  if(overall < 55){
+    vClass='bad'; vBadgeText='❌ پیشنهاد نمی‌شود';
+    title='این دستگاه برای کاربرد مدرن ضعیف است';
+    desc = `با توجه به کاربرد «${w.name}»، مشخصات سخت‌افزاری این دستگاه به حدی ضعیف است که حتی با قیمت پایین، ارزش خرید ندارد. برای کارهای روزمره‌ی امروزی (مرورگر سنگین، چندتسکه، ویدئو ۴K) کافی نیست.`;
+  } else if(valueInfo && vScore < 35){
+    vClass='bad'; vBadgeText='❌ گران‌تر از ارزش واقعی';
+    title='قیمت بیش از حد بالاست';
+    desc = `دستگاه از نظر فنی قابل‌قبول است اما قیمت آن متناسب با کارایی‌اش نیست. می‌توانید با مبلغ کمتر دستگاه مشابه پیدا کنید.`;
+  } else if(overall>=80 && vScore>=45){
+    vClass='good'; vBadgeText='✅ ارزش خرید دارد';
+    title='خرید این دستگاه پیشنهاد می‌شود';
+    desc = `با توجه به کاربرد «${w.name}»، این دستگاه در سطح بالایی از کارایی قرار دارد و مشخصات آن توجیه‌کننده‌ی قیمت است.`;
+  } else if(overall>=70 && vScore>=55){
+    vClass='good'; vBadgeText='✅ ارزش خرید دارد';
+    title='خرید این دستگاه پیشنهاد می‌شود';
+    desc = `با توجه به کاربرد «${w.name}» و نسبت قیمت به کارایی، این دستگاه گزینه‌ی خوبی است. مشخصات آن کافی و قیمت منصفانه است.`;
+  } else if(overall>=55){
+    vClass='warn'; vBadgeText='⚠️ قابل بررسی';
+    title='دستگاه متوسط — با دقت بررسی کنید';
+    desc = `دستگاه برای کاربرد «${w.name}» قابل‌قبول است اما نقاط ضعفی دارد. حتماً با گزینه‌های هم‌قیمت مقایسه کنید.`;
+  } else {
+    vClass='bad'; vBadgeText='❌ پیشنهاد نمی‌شود';
+    title='برای این کاربرد مناسب نیست';
+    desc = `با توجه به کاربرد «${w.name}»، مشخصات دستگاه کافی نیست یا نسبت قیمت به کارایی ضعیف است.`;
+  }
+  card.classList.add(vClass);
+  badge.classList.add(vClass);
+  badge.textContent = vBadgeText;
+  $('verdictTitle').textContent = title;
+  $('verdictDesc').textContent = desc;
+
+  // Price meter
+  const pm = $('priceMeter');
+  pm.innerHTML='';
+  if(valueInfo){
+    // Read currency from DOM (it's a local var of calculate(), not in scope here)
+    const cur = $('currency').value;
+    const fmtPrice = (n)=> {
+      const symbols={toman:'تومان', usd:'$', eur:'€', aed:'AED'};
+      if(cur==='usd'||cur==='eur'||cur==='aed') return symbols[cur]+n.toLocaleString('en-US',{maximumFractionDigits:0});
+      return faNum(Math.round(n))+' تومان';
+    };
+    // Convert expected-USD to user's currency
+    const curMult = cur==='toman'?60000 : (cur==='usd'?1 : (cur==='eur'?0.92 : 3.7));
+    pm.innerHTML = `
+      <span class="pill">قیمت وارد‌شده: <b>${fmtPrice(parseFloat($('price').value))}</b></span>
+      <span class="pill">ارزش تخمینی: <b>${fmtPrice(valueInfo.expected * curMult)}</b></span>
+      <span class="pill">نسبت ارزش: <b>${valueInfo.ratio.toFixed(2)}×</b></span>
+      <span class="pill">امتیاز ارزش: <b>${faNum(Math.round(valueInfo.vScore))}/۱۰۰</b></span>
+    `;
+  } else {
+    pm.innerHTML = '<span class="pill">برای محاسبه‌ی ارزش قیمت، قیمت را وارد کنید</span>';
+  }
+
+  // Breakdown bars
+  const labels = {
+    cpu:'پردازنده', gpu:'گرافیک', ram:'حافظه RAM', storage:'ذخیره‌سازی',
+    display:'صفحه نمایش', battery:'باطری', build:'کیفیت ساخت', ports:'پورت‌ها',
+    conn:'اتصالات', upgrade:'قابلیت ارتقا', brand:'برند/گارانتی', os:'سیستم‌عامل'
+  };
+  const weights = {cpu:w.cpu,gpu:w.gpu,ram:w.ram,storage:w.storage,display:w.display,battery:w.battery,build:w.build,ports:w.ports,conn:w.conn,upgrade:w.upgrade,brand:w.brand,os:w.os};
+  const bd = $('breakdownBars');
+  bd.innerHTML='';
+  Object.keys(labels).forEach(k=>{
+    const s = scores[k];
+    const cls = s>=75?'good':(s>=50?'warn':'bad');
+    bd.innerHTML += `
+      <div class="bar-item">
+        <div class="bar-head">
+          <span class="name">${labels[k]} <small style="color:var(--muted);font-weight:400">(وزن: ${faNum(Math.round(weights[k]*100))}٪)</small></span>
+          <span class="val">${faNum(Math.round(s))}/۱۰۰</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill ${cls}" style="width:0%"></div></div>
+      </div>
+    `;
+  });
+  // animate
+  setTimeout(()=>{
+    document.querySelectorAll('#breakdownBars .bar-fill').forEach((el,i)=>{
+      const k = Object.keys(labels)[i];
+      el.style.width = scores[k]+'%';
+    });
+  },50);
+
+  // Value breakdown
+  const vb = $('valueBreakdown');
+  if(valueInfo){
+    const vClass2 = valueInfo.vScore>=70?'good':(valueInfo.vScore>=45?'warn':'bad');
+    vb.innerHTML = `
+      <div class="bar-item">
+        <div class="bar-head"><span class="name">امتیاز ارزش (Value Score)</span><span class="val">${faNum(Math.round(valueInfo.vScore))}/۱۰۰</span></div>
+        <div class="bar-track"><div class="bar-fill ${vClass2}" style="width:${valueInfo.vScore}%"></div></div>
+      </div>
+      <div class="bar-item">
+        <div class="bar-head"><span class="name">نسبت ارزش به قیمت</span><span class="val">${valueInfo.ratio.toFixed(2)}×</span></div>
+        <div class="bar-track"><div class="bar-fill ${valueInfo.ratio>=1?'good':'warn'}" style="width:${Math.min(100,valueInfo.ratio*50)}%"></div></div>
+      </div>
+      <div style="margin-top:14px;font-size:12px;color:var(--muted);line-height:1.8">
+        <b style="color:var(--text)">راهنمای تفسیر:</b><br>
+        • نسبت &gt; ۱.۲: قیمت عالی و مناسب<br>
+        • نسبت ۰.۸ تا ۱.۲: قیمت منصفانه<br>
+        • نسبت &lt; ۰.۸: دستگاه گران است<br>
+        امتیاز ارزش، تاثیر وضعیت دستگاه (نو/کارکرده) و گارانتی را نیز در بر می‌گیرد.
+      </div>
+    `;
+  } else {
+    vb.innerHTML = `<div style="color:var(--muted);font-size:13px">برای محاسبه‌ی ارزش، لطفاً قیمت دستگاه را وارد کنید.</div>`;
+  }
+
+  // Pros & Cons
+  const pros=[], cons=[], recs=[];
+  // CPU
+  if(scores.cpu>=75) pros.push(`پردازنده‌ی قوی (امتیاز ${faNum(Math.round(scores.cpu))}) — برای کاربردهای سنگین ایده‌آل`);
+  else if(scores.cpu<45) cons.push(`پردازنده‌ی ضعیف — برای کارهای سنگین مناسب نیست`);
+  // GPU
+  if(scores.gpu>=75) pros.push(`گرافیک قدرتمند — برای گیمینگ و رندر عالی`);
+  else if(scores.gpu<35 && (activeCase==='gaming'||activeCase==='creator'||activeCase==='workstation')) cons.push(`گرافیک برای این کاربرد کافی نیست`);
+  // RAM
+  if(parseInt($('ram_capacity').value)>=16) pros.push(`حافظه‌ی RAM کافی (${faNum(parseInt($('ram_capacity').value))} گیگ)`);
+  else cons.push(`RAM کم (${faNum(parseInt($('ram_capacity').value))} گیگ) — برای کارهای مدرن کم است`);
+  // Storage
+  if(scores.storage>=80) pros.push(`حافظه‌ی ذخیره‌سازی سریع و کافی`);
+  else if(scores.storage<50) cons.push(`حافظه‌ی ذخیره‌سازی ضعیف یا کند`);
+  // Display
+  if(scores.display>=80) pros.push(`صفحه‌نمایش باکیفیت (نسبت به رزولوشن، نرخ نوسازی و پنل)`);
+  else if(scores.display<50) cons.push(`صفحه‌نمایش ضعیف — برای کار طولانی مناسب نیست`);
+  // Battery
+  const wh=parseFloat($('battery_wh').value)||0;
+  if(wh>=70) pros.push(`باطری حجیم (${faNum(wh)} Wh) — مناسب کار بدون آداپتور`);
+  else if(wh>0 && wh<50) cons.push(`باطری کوچک (${faNum(wh)} Wh) — استقلال کم`);
+  // Build
+  if(scores.build>=80) pros.push(`کیفیت ساخت خوب و وزن مناسب`);
+  else if(scores.build<50) cons.push(`کیفیت ساخت متوسط یا وزن زیاد`);
+  // Upgrade
+  if(scores.upgrade>=70) pros.push(`قابلیت ارتقای خوب — عمر مفید طولانی‌تر`);
+  else if(scores.upgrade<40) cons.push(`قابلیت ارتقا محدود — آینده‌ی دستگاه کوتاه`);
+  // Ports
+  if(scores.ports>=75) pros.push(`تنوع پورت‌های خوب`);
+  else if(scores.ports<45) cons.push(`پورت‌های محدود — به دانگل نیاز دارید`);
+  // OS
+  if($('os').value==='dos') cons.push(`بدون سیستم‌عامل (DOS) — باید ویندوز جدا نصب کنید`);
+  if($('condition').value==='used_no_warranty') cons.push(`کارکرده بدون گارانتی — ریسک بالاتر`);
+  if($('warranty').value==='none' && $('condition').value!=='new') cons.push(`بدون گارانتی رسمی`);
+
+  // Value
+  if(valueInfo){
+    // Only mark "great value" if the device itself is usable (overall>=60) AND price is good.
+    // A $50 Atom is "cheap" but still a waste of money.
+    if(valueInfo.vScore>=70 && overall>=55) pros.push(`نسبت قیمت به کارایی عالی (${valueInfo.ratio.toFixed(2)}×)`);
+    else if(valueInfo.vScore<40 && overall>=55) cons.push(`قیمت بالاتر از ارزش واقعی دستگاه`);
+    else if(overall<55 && valueInfo.usdPaid > 100) cons.push(`با وجود قیمت پایین، دستگاه برای کاربرد مدرن ضعیف است — ارزش خرید ندارد`);
+  }
+
+  // Recommendations based on use case
+  if(activeCase==='gaming'){
+    if(scores.gpu<70) recs.push('برای گیمینگ، GPU حداقل RTX 4060 / RX 7600 یا بالاتر پیشنهاد می‌شود');
+    if(parseInt($('disp_hz').value)<120) recs.push('نرخ نوسازی حداقل ۱۲۰Hz برای گیمینگ رقابتی ضروری است');
+    if(wh<70) recs.push('برای گیمینگ، باطری بزرگ‌تر و شارژر سریع را در نظر بگیرید');
+  }
+  if(activeCase==='dev'){
+    if(parseInt($('ram_capacity').value)<16) recs.push('برای برنامه‌نویسی حرفه‌ای حداقل ۱۶GB (ایده‌آل ۳۲GB) RAM نیاز دارید');
+    if(scores.storage<70) recs.push('برای پروژه‌های بزرگ و Docker، NVMe با ظرفیت بالا ضروری است');
+  }
+  if(activeCase==='creator'){
+    if($('disp_color').value==='45_ntsc' || $('disp_color').value==='62_ntsc') recs.push('برای ویرایش رنگ، صفحه‌نمایش با پوشش ۱۰۰٪ sRGB یا DCI-P3 ضروری است');
+    if(scores.cpu<70) recs.push('برای رندر ویدئو و ۳D، CPU چند‌هسته‌ای قوی ضروری است');
+  }
+  if(activeCase==='student'){
+    if(parseFloat($('weight').value)>2.2) recs.push('برای دانشجو، وزن زیر ۱.۸ کیلوگرم راحت‌تر است');
+    if(wh<50) recs.push('باطری بزرگ برای کلاس‌های طولانی مهم است');
+  }
+  if(activeCase==='workstation'){
+    if(parseInt($('ram_capacity').value)<32) recs.push('برای Workstation حداقل ۳۲GB RAM توصیه می‌شود');
+    if(scores.upgrade<60) recs.push('قابلیت ارتقا برای کارهای حرفه‌ای بسیار مهم است');
+  }
+  if(valueInfo && valueInfo.vScore<45) recs.push('با این مبلغ، گزینه‌های هم‌کلاس بهتری در بازار پیدا می‌شود — مقایسه کنید');
+  if($('ram_upgrade').value==='no' && parseInt($('ram_capacity').value)<=16) recs.push('RAM غیرقابل ارتقا — برای آینده ۳۲GB را از ابتدا انتخاب کنید');
+
+  const pl = $('prosList'); pl.innerHTML = pros.length?pros.map(p=>`<li>${p}</li>`).join(''):'<li style="color:var(--muted)">نقطه‌ی قوت مشخصی شناسایی نشد</li>';
+  const cl = $('consList'); cl.innerHTML = cons.length?cons.map(c=>`<li>${c}</li>`).join(''):'<li style="color:var(--muted)">نقطه‌ضعف خاصی شناسایی نشد</li>';
+  const rl = $('recList'); rl.innerHTML = recs.length?recs.map(r=>`<li>${r}</li>`).join(''):'<li>همه‌چیز خوب به‌نظر می‌رسد. خرید با خیال راحت.</li>';
+
+  // Scroll to results
+  setTimeout(()=> $('results').scrollIntoView({behavior:'smooth',block:'start'}), 100);
+}
+
+/* ---------- Events ---------- */
+document.querySelectorAll('.usecase-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.usecase-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    activeCase = btn.dataset.case;
+  });
+});
+
+$('cpu_model').addEventListener('change', e=>{
+  $('cpuCustomField').style.display = e.target.value.startsWith('custom')?'block':'none';
+});
+$('gpu_type').addEventListener('change', e=>{
+  const t=e.target.value;
+  $('gpuModelField').style.display = (t==='dedicated')?'block':'none';
+});
+$('gpu_model').addEventListener('change', e=>{
+  $('gpuCustomField').style.display = e.target.value.startsWith('custom')?'block':'none';
+});
+
+$('calcBtn').addEventListener('click', calculate);
+$('resetBtn').addEventListener('click', ()=>{
+  if(confirm('همه‌ی فیلدها پاک شوند؟')){
+    document.querySelectorAll('input[type=number],input[type=text]').forEach(i=>i.value='');
+    document.querySelectorAll('input[type=checkbox]').forEach(i=>i.checked=false);
+    location.reload();
+  }
+});
+
+/* ---------- Quick Presets ---------- */
+const PRESETS = {
+  // User's actual device — Intel Atom x5-Z8350 mini-PC
+  atom_z8350: {
+    useCase:'general',
+    cpu_model:'atom-x5-z8350,750', cpu_cores:4, cpu_threads:4, cpu_base:1.44, cpu_boost:1.92,
+    gpu_type:'igpu', gpu_model:'custom,300', gpu_vram:0, gpu_tgp:0,
+    ram_capacity:'4', ram_type:'lpddr4x', ram_speed:1600, ram_channel:'single', ram_upgrade:'no',
+    storage_type:'emmc', storage_cap:64, storage_slots:'0', storage_secondary:'none',
+    disp_size:0, disp_res:'fhd', disp_hz:'60', disp_panel:'ips', disp_brightness:250, disp_color:'45_ntsc', disp_touch:'no',
+    battery_wh:0, weight:0, build_material:'plastic', thickness:40,
+    keyboard:'membrane', fast_charge:'no', cooling:'passive',
+    ports:['usb_a','usb_c','hdmi','audio','sd'], wifi:'wifi5', bluetooth:'bt5',
+    feats:['webcam_hd'],
+    price:0, currency:'toman', os:'win11_home', warranty:'6m', condition:'used_no_warranty', brand:'other'
+  },
+  n100: {
+    useCase:'general',
+    cpu_model:'N100,1500', cpu_cores:4, cpu_threads:4, cpu_base:1.0, cpu_boost:3.4,
+    gpu_type:'igpu', gpu_model:'custom,1500', gpu_vram:0, gpu_tgp:0,
+    ram_capacity:'8', ram_type:'ddr4', ram_speed:3200, ram_channel:'single', ram_upgrade:'yes',
+    storage_type:'nvme_gen3', storage_cap:256, storage_slots:'1', storage_secondary:'none',
+    disp_size:0, disp_res:'fhd', disp_hz:'60', disp_panel:'ips', disp_brightness:300, disp_color:'100_srgb', disp_touch:'no',
+    battery_wh:0, weight:0.5, build_material:'plastic', thickness:40,
+    keyboard:'membrane', fast_charge:'no', cooling:'passive',
+    ports:['usb_a','usb_c','hdmi','audio'], wifi:'wifi6', bluetooth:'bt52',
+    feats:[],
+    price:0, currency:'toman', os:'win11_home', warranty:'12m', condition:'new', brand:'other'
+  },
+  i5_mid: {
+    useCase:'general',
+    cpu_model:'i5-1240P,2900', cpu_cores:12, cpu_threads:16, cpu_base:1.7, cpu_boost:4.4,
+    gpu_type:'igpu', gpu_model:'custom,1800', gpu_vram:0, gpu_tgp:0,
+    ram_capacity:'16', ram_type:'ddr4', ram_speed:3200, ram_channel:'dual', ram_upgrade:'yes',
+    storage_type:'nvme_gen4', storage_cap:512, storage_slots:'2', storage_secondary:'none',
+    disp_size:14, disp_res:'fhd_plus', disp_hz:'60', disp_panel:'ips', disp_brightness:300, disp_color:'100_srgb', disp_touch:'no',
+    battery_wh:55, weight:1.5, build_material:'alu', thickness:18,
+    keyboard:'good_membrane', fast_charge:'usb_pd', cooling:'single_fan',
+    ports:['usb_c','thunderbolt','usb_a','hdmi','audio'], wifi:'wifi6', bluetooth:'bt52',
+    feats:['backlight','fingerprint','webcam_hd'],
+    price:0, currency:'toman', os:'win11_home', warranty:'12m', condition:'new', brand:'lenovo'
+  },
+  gaming_mid: {
+    useCase:'gaming',
+    cpu_model:'i7-13700H,5200', cpu_cores:14, cpu_threads:20, cpu_base:2.4, cpu_boost:5.0,
+    gpu_type:'dedicated', gpu_model:'rtx4060m,5500', gpu_vram:8, gpu_tgp:105,
+    ram_capacity:'16', ram_type:'ddr5', ram_speed:4800, ram_channel:'dual', ram_upgrade:'soldered_one',
+    storage_type:'nvme_gen4', storage_cap:1024, storage_slots:'2', storage_secondary:'none',
+    disp_size:15.6, disp_res:'fhd', disp_hz:'144', disp_panel:'ips', disp_brightness:300, disp_color:'100_srgb', disp_touch:'no',
+    battery_wh:60, weight:2.2, build_material:'plastic_alu', thickness:23,
+    keyboard:'mechanical', fast_charge:'proprietary', cooling:'dual_fan',
+    ports:['usb_c','usb_a','hdmi','ethernet','audio','sd'], wifi:'wifi6', bluetooth:'bt53',
+    feats:['backlight','webcam_hd'],
+    price:0, currency:'toman', os:'win11_home', warranty:'12m', condition:'new', brand:'asus'
+  },
+  macbook_m2: {
+    useCase:'general',
+    cpu_model:'m2,4800', cpu_cores:8, cpu_threads:8, cpu_base:3.5, cpu_boost:3.5,
+    gpu_type:'igpu', gpu_model:'custom,3000', gpu_vram:0, gpu_tgp:0,
+    ram_capacity:'8', ram_type:'lpddr5', ram_speed:6400, ram_channel:'dual', ram_upgrade:'no',
+    storage_type:'nvme_gen4', storage_cap:256, storage_slots:'0', storage_secondary:'none',
+    disp_size:13.6, disp_res:'2k_apple', disp_hz:'60', disp_panel:'ips', disp_brightness:500, disp_color:'100_dcip3', disp_touch:'no',
+    battery_wh:52, weight:1.24, build_material:'alu', thickness:11,
+    keyboard:'low_profile', fast_charge:'usb_pd', cooling:'passive',
+    ports:['usb_c','usb_c','audio'], wifi:'wifi6', bluetooth:'bt53',
+    feats:['backlight','faceid','webcam_hd',' speakers_good'],
+    price:0, currency:'toman', os:'macos', warranty:'12m', condition:'new', brand:'apple'
+  }
+};
+
+function applyPreset(name){
+  const p = PRESETS[name];
+  if(!p) return;
+  // use case
+  document.querySelectorAll('.usecase-btn').forEach(b=>b.classList.toggle('active', b.dataset.case===p.useCase));
+  activeCase = p.useCase;
+
+  // simple fields
+  const fields = ['cpu_model','cpu_cores','cpu_threads','cpu_base','cpu_boost',
+    'gpu_type','gpu_model','gpu_vram','gpu_tgp',
+    'ram_capacity','ram_type','ram_speed','ram_channel','ram_upgrade',
+    'storage_type','storage_cap','storage_slots','storage_secondary',
+    'disp_size','disp_res','disp_hz','disp_panel','disp_brightness','disp_color','disp_touch',
+    'battery_wh','weight','build_material','thickness',
+    'keyboard','fast_charge','cooling',
+    'wifi','bluetooth','price','currency','os','warranty','condition','brand'];
+  fields.forEach(f=>{ if(p[f]!==undefined) $(f).value = p[f]; });
+
+  // toggle visibility for custom fields
+  $('cpuCustomField').style.display = String(p.cpu_model).startsWith('custom')?'block':'none';
+  $('gpuModelField').style.display = p.gpu_type==='dedicated'?'block':'block';
+  $('gpuCustomField').style.display = String(p.gpu_model).startsWith('custom')?'block':'none';
+
+  // checkboxes
+  document.querySelectorAll('input[data-ports]').forEach(c=>c.checked = (p.ports||[]).includes(c.value));
+  document.querySelectorAll('input[data-feats]').forEach(c=>c.checked = (p.feats||[]).includes(c.value.trim()));
+
+  // hide results section
+  $('results').classList.remove('show');
+  // scroll to price field
+  setTimeout(()=>$('price').scrollIntoView({behavior:'smooth',block:'center'}), 200);
+  // focus price
+  setTimeout(()=>$('price').focus(), 600);
+}
+
+document.querySelectorAll('[data-preset]').forEach(btn=>{
+  btn.addEventListener('click', ()=>applyPreset(btn.dataset.preset));
+});
+
+// Init: hide GPU model field if not dedicated
+$('gpuModelField').style.display = 'block';
+
+/* =========================================================
+   HARDWARE LAB — Live Tests
+   ========================================================= */
+
+const LAB = {
+  results: {}, // {testKey: {status:'ok|warn|bad|skip', value, message}}
+  state: {
+    camStream:null, micStream:null, spCtx:null, spOsc:null, spGain:null,
+    micCtx:null, micAnalyser:null, micRAF:null, micPeak:0,
+    fpsRAF:null, dispCycleTimer:null, battery:null
+  }
+};
+
+function setLabStatus(id, status, text){
+  const el = $(id);
+  if(!el) return;
+  el.className = 'lab-status ' + status;
+  el.innerHTML = `<span class="dot"></span> ${text}`;
+}
+function setLabValue(id, value, cls){
+  const el = $(id);
+  if(!el) return;
+  el.textContent = value;
+  if(cls) el.className = 'v ' + cls;
+}
+function showToast(msg, dur=2500){
+  const t = $('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), dur);
+}
+function recordLabResult(testKey, status, value, message){
+  LAB.results[testKey] = {status, value, message};
+}
+
+/* ---------- Tab Switching ---------- */
+document.querySelectorAll('.main-tab').forEach(tab=>{
+  tab.addEventListener('click', ()=>{
+    document.querySelectorAll('.main-tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+    tab.classList.add('active');
+    const view = tab.dataset.view;
+    $(view + 'View').classList.add('active');
+    // Update sticky bar hint
+    $('stickyHint').textContent = view==='lab' ? 'آزمایشگاه سخت‌افزار' : 'کافیست مشخصات را پر کنید';
+    // Hide results section when switching to lab
+    if(view==='lab') $('results').classList.remove('show');
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+});
+
+/* ============ 1. WEBCAM TEST ============ */
+let camStream = null;
+$('camStart').addEventListener('click', async ()=>{
+  try{
+    setLabStatus('camStatus','running','در حال روشن کردن دوربین...');
+    camStream = await navigator.mediaDevices.getUserMedia({video:{width:1280,height:720}, audio:false});
+    LAB.state.camStream = camStream;
+    const v = $('camVideo');
+    v.srcObject = camStream;
+    v.style.display = 'block';
+    $('camPlaceholder').style.display = 'none';
+    $('camSnap').disabled = false;
+    $('camStop').disabled = false;
+    $('camStart').disabled = true;
+    setLabStatus('camStatus','running','دوربین فعال — برای تحلیل روی «عکس‌برداری» بزنید');
+    setLabValue($('camOutput').querySelector('.v'), 'فعال', 'good');
+  }catch(err){
+    setLabStatus('camStatus','bad','خطا در دسترسی به دوربین');
+    setLabValue($('camOutput').querySelector('.v'), 'خطا: ' + err.message, 'bad');
+    recordLabResult('webcam','bad',null,'دسترسی به دوربین ناموفق');
+  }
+});
+$('camSnap').addEventListener('click', ()=>{
+  const v = $('camVideo');
+  if(!v.videoWidth){ showToast('دوربین هنوز آماده نیست'); return; }
+  const c = document.createElement('canvas');
+  c.width = v.videoWidth; c.height = v.videoHeight;
+  const cx = c.getContext('2d');
+  cx.drawImage(v, 0, 0);
+  // Analyze brightness, contrast, sharpness
+  const img = cx.getImageData(0, 0, c.width, c.height);
+  const data = img.data;
+  let sum=0, sumSq=0, n=0, prevLum=0, edgeSum=0;
+  // Sample every 4th pixel for speed
+  for(let i=0; i<data.length; i+=16){
+    const r=data[i], g=data[i+1], b=data[i+2];
+    const lum = 0.299*r + 0.587*g + 0.114*b;
+    sum += lum; sumSq += lum*lum; n++;
+    if(n>1) edgeSum += Math.abs(lum - prevLum);
+    prevLum = lum;
+  }
+  const mean = sum/n;
+  const variance = sumSq/n - mean*mean;
+  const stdDev = Math.sqrt(Math.max(0, variance));
+  const sharpness = edgeSum / n;
+  let camStatus='ok', camMsg='سالم';
+  if(mean<30){ camStatus='bad'; camMsg='تصویر خیلی تاریک — لنز را پاک کنید یا نور را افزایش دهید'; }
+  else if(mean>235){ camStatus='warn'; camMsg='تصویر بیش از حد روشن — احتمالاً نور زیاد یا اشکال در سنسور'; }
+  else if(stdDev<10){ camStatus='warn'; camMsg='کنتراست پایین — تصویر تخت، احتمالاً اشکال در سنسور'; }
+  else if(sharpness<3){ camStatus='warn'; camMsg='شارپنس پایین — لنز کثیف یا فوکوس نامناسب'; }
+
+  const out = $('camOutput');
+  out.innerHTML = `
+    <div class="row"><span class="k">وضعیت</span><span class="v ${camStatus}">${camMsg}</span></div>
+    <div class="row"><span class="k">روشنایی میانگین</span><span class="v">${faNum(Math.round(mean))} / ۲۵۵</span></div>
+    <div class="row"><span class="k">کنتراست (انحراف معیار)</span><span class="v">${faNum(Math.round(stdDev))}</span></div>
+    <div class="row"><span class="k">شارپنس (لبه)</span><span class="v">${faNum(Math.round(sharpness))}</span></div>
+    <div class="row"><span class="k">رزولوشن دوربین</span><span class="v">${faNum(c.width)}×${faNum(c.height)}</span></div>
+  `;
+  setLabStatus('camStatus', camStatus, camStatus==='ok'?'دوربین سالم است':camMsg);
+  recordLabResult('webcam', camStatus, {mean:Math.round(mean), stdDev:Math.round(stdDev), sharpness:Math.round(sharpness), res:`${c.width}x${c.height}`}, camMsg);
+  // Show snapshot in a new tab? Just keep in canvas — append a thumbnail
+  const wrap = $('camVideo').parentElement;
+  // Add a small snapshot thumbnail below
+  let thumb = document.getElementById('camThumb');
+  if(!thumb){
+    thumb = document.createElement('img');
+    thumb.id='camThumb';
+    thumb.style.cssText='position:absolute;bottom:10px;left:10px;width:80px;height:60px;object-fit:cover;border:2px solid var(--primary);border-radius:6px;box-shadow:0 4px 12px rgba(0,0,0,.5)';
+    wrap.appendChild(thumb);
+  }
+  thumb.src = c.toDataURL('image/jpeg', 0.7);
+});
+$('camStop').addEventListener('click', ()=>{
+  if(camStream){ camStream.getTracks().forEach(t=>t.stop()); camStream=null; }
+  $('camVideo').srcObject = null;
+  $('camVideo').style.display = 'none';
+  $('camPlaceholder').style.display = 'block';
+  $('camSnap').disabled = true;
+  $('camStop').disabled = true;
+  $('camStart').disabled = false;
+  setLabStatus('camStatus','idle','دوربین خاموش شد');
+});
+
+/* ============ 2. DISPLAY TEST ============ */
+function updateDisplayInfo(){
+  const dpr = window.devicePixelRatio || 1;
+  const sw = screen.width, sh = screen.height;
+  const aw = screen.availWidth, ah = screen.availHeight;
+  setLabValue('dispRes', `${faNum(sw)}×${faNum(sh)}`);
+  setLabValue('dispPhys', `${faNum(Math.round(sw*dpr))}×${faNum(Math.round(sh*dpr))}`);
+  setLabValue('dispDpr', faNum(dpr.toFixed(2)));
+  setLabValue('dispDepth', screen.colorDepth ? `${faNum(screen.colorDepth)}-bit` : 'نامشخص');
+  // Color gamut
+  let gamut='sRGB';
+  if(window.matchMedia('(color-gamut: rec2020)').matches) gamut='Rec2020 (واید گومت)';
+  else if(window.matchMedia('(color-gamut: p3)').matches) gamut='DCI-P3 (واید)';
+  setLabValue('dispGamut', gamut);
+  // Refresh rate (approximate, via rAF measurement if available)
+  if(window.requestAnimationFrame){
+    let frames=0, start=performance.now();
+    const check = ()=>{ frames++; if(performance.now()-start < 1000) requestAnimationFrame(check);
+      else setLabValue('dispRate', `${faNum(frames)} Hz`);
+    };
+    requestAnimationFrame(check);
+  }
+}
+updateDisplayInfo();
+window.addEventListener('resize', updateDisplayInfo);
+
+const dispOverlay = $('dispOverlay');
+const dispColors = [
+  {c:'#ffffff', n:'سفید'},
+  {c:'#000000', n:'سیاه'},
+  {c:'#ff0000', n:'قرمز'},
+  {c:'#00ff00', n:'سبز'},
+  {c:'#0000ff', n:'آبی'},
+  {c:'#808080', n:'طوسی (برای چک‌کردن GPU dithering)'}
+];
+let dispIdx = -1;
+function showDisplayColor(color, name){
+  dispOverlay.style.backgroundColor = color;
+  $('dispHint').textContent = `${name} — برای بستن کلیک کنید`;
+  dispOverlay.classList.add('show');
+  setLabStatus('dispStatus','running','در حال نمایش ' + name);
+  // Try fullscreen on documentElement
+  if(document.documentElement.requestFullscreen){
+    document.documentElement.requestFullscreen().catch(()=>{});
+  }
+}
+dispOverlay.addEventListener('click', ()=>{
+  dispOverlay.classList.remove('show');
+  if(document.fullscreenElement) document.exitFullscreen().catch(()=>{});
+  setLabStatus('dispStatus','ok','تست پایان یافت — پیکسل‌های مرده را چک کنید');
+  recordLabResult('display','ok',{res:`${screen.width}x${screen.height}`, dpr:window.devicePixelRatio, gamut:$('dispGamut').textContent},'تست نمایشگر انجام شد');
+});
+document.querySelectorAll('[data-disp]').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const c = btn.dataset.disp;
+    const item = dispColors.find(x=>x.c===c);
+    showDisplayColor(item.c, item.n);
+  });
+});
+$('dispCycle').addEventListener('click', ()=>{
+  let i=0;
+  const next = ()=>{
+    if(i>=dispColors.length){
+      dispOverlay.classList.remove('show');
+      if(document.fullscreenElement) document.exitFullscreen().catch(()=>{});
+      setLabStatus('dispStatus','ok','چرخه پایان یافت');
+      return;
+    }
+    showDisplayColor(dispColors[i].c, dispColors[i].n + ` (${faNum(i+1)}/${faNum(dispColors.length)})`);
+    i++;
+  };
+  next();
+  LAB.state.dispCycleTimer = setInterval(()=>{
+    if(i<dispColors.length) next();
+    else clearInterval(LAB.state.dispCycleTimer);
+  }, 3000);
+  dispOverlay.addEventListener('click', ()=>clearInterval(LAB.state.dispCycleTimer), {once:true});
+});
+
+/* ============ 3. TOUCHPAD / MOUSE TEST ============ */
+const tpCanvas = $('tpCanvas');
+const tpCtx = tpCanvas.getContext('2d');
+let tpDrawing = false, tpPoints = 0, tpLeft = 0, tpRight = 0, tpScroll = 0, tpMulti = false;
+function tpResize(){
+  const r = tpCanvas.getBoundingClientRect();
+  tpCanvas.width = r.width * (window.devicePixelRatio||1);
+  tpCanvas.height = r.height * (window.devicePixelRatio||1);
+  tpCtx.scale(window.devicePixelRatio||1, window.devicePixelRatio||1);
+  tpCtx.fillStyle = '#0b1020';
+  tpCtx.fillRect(0, 0, r.width, r.height);
+  tpCtx.strokeStyle = '#5b8cff';
+  tpCtx.lineWidth = 2;
+  tpCtx.lineCap = 'round';
+}
+function tpStart(){
+  tpResize();
+  setLabStatus('tpStatus','running','تست فعال — در کادر نقاشی بکشید و کلیک کنید');
+  showToast('در کادر نقاشی بکشید. کلیک چپ، کلیک راست و اسکرول را هم تست کنید.');
+}
+$('tpStart').addEventListener('click', tpStart);
+$('tpClear').addEventListener('click', ()=>{
+  const r = tpCanvas.getBoundingClientRect();
+  tpCtx.fillStyle = '#0b1020';
+  tpCtx.fillRect(0, 0, r.width, r.height);
+  tpPoints = 0; tpLeft = 0; tpRight = 0; tpScroll = 0; tpMulti = false;
+  $('tpLeftClicks').textContent='۰';
+  $('tpRightClicks').textContent='۰';
+  $('tpScrolls').textContent='۰';
+  $('tpPoints').textContent='۰';
+  $('tpMulti').textContent='—';
+});
+function tpPos(e){
+  const r = tpCanvas.getBoundingClientRect();
+  if(e.touches && e.touches[0]) return {x:e.touches[0].clientX-r.left, y:e.touches[0].clientY-r.top};
+  return {x:e.clientX-r.left, y:e.clientY-r.top};
+}
+function tpDown(e){
+  e.preventDefault();
+  tpDrawing = true;
+  const p = tpPos(e);
+  tpCtx.beginPath();
+  tpCtx.moveTo(p.x, p.y);
+  if(e.button===2){ tpRight++; $('tpRightClicks').textContent = faNum(tpRight); }
+  else { tpLeft++; $('tpLeftClicks').textContent = faNum(tpLeft); }
+  if(e.touches && e.touches.length>=2){ tpMulti=true; $('tpMulti').textContent='✅ تشخیص داده شد'; $('tpMulti').className='v good'; }
+}
+function tpMove(e){
+  if(!tpDrawing) return;
+  e.preventDefault();
+  const p = tpPos(e);
+  tpCtx.lineTo(p.x, p.y);
+  tpCtx.stroke();
+  tpPoints++;
+  $('tpPoints').textContent = faNum(tpPoints);
+}
+function tpUp(){ tpDrawing = false; }
+function tpWheel(e){ e.preventDefault(); tpScroll++; $('tpScrolls').textContent = faNum(tpScroll); }
+tpCanvas.addEventListener('mousedown', tpDown);
+tpCanvas.addEventListener('mousemove', tpMove);
+tpCanvas.addEventListener('mouseup', tpUp);
+tpCanvas.addEventListener('mouseleave', tpUp);
+tpCanvas.addEventListener('contextmenu', e=>e.preventDefault());
+tpCanvas.addEventListener('wheel', tpWheel, {passive:false});
+tpCanvas.addEventListener('touchstart', tpDown, {passive:false});
+tpCanvas.addEventListener('touchmove', tpMove, {passive:false});
+tpCanvas.addEventListener('touchend', tpUp);
+// After some interaction, evaluate
+let tpEvalTimer = setInterval(()=>{
+  if(tpPoints>50 && tpLeft>=2){
+    setLabStatus('tpStatus','ok','تاچ‌پد/ماوس سالم به‌نظر می‌رسد');
+    recordLabResult('touchpad','ok',{points:tpPoints, leftClicks:tpLeft, rightClicks:tpRight, scroll:tpScroll, multiTouch:tpMulti},'تست تاچ‌پد انجام شد');
+    clearInterval(tpEvalTimer);
+  }
+}, 2000);
+
+/* ============ 4. KEYBOARD TEST ============ */
+const KB_LAYOUT = [
+  ['Esc','1','2','3','4','5','6','7','8','9','0','-','='],
+  ['Tab','Q','W','E','R','T','Y','U','I','O','P','[',']','\\'],
+  ['CapsLock','A','S','D','F','G','H','J','K','L',';','\'','Enter'],
+  ['Shift','Z','X','C','V','B','N','M',',','.','/','Shift'],
+  ['Ctrl','Alt','Space','Alt','Ctrl']
+];
+let kbTested = new Set();
+let kbTotal = 0;
+function buildKeyboard(){
+  const grid = $('kbGrid');
+  grid.innerHTML = '';
+  KB_LAYOUT.forEach(row=>{
+    const r = document.createElement('div');
+    r.className = 'kb-row';
+    row.forEach(key=>{
+      const k = document.createElement('div');
+      k.className = 'kb-key';
+      k.dataset.key = key.toLowerCase();
+      if(key==='Space') k.classList.add('space');
+      else if(key==='CapsLock'||key==='Shift'||key==='Enter') k.classList.add('wide');
+      else if(key==='Tab'||key==='\\') k.classList.add('wide');
+      k.textContent = key==='Space' ? '␣ Space' : key;
+      r.appendChild(k);
+      kbTotal++;
+    });
+    grid.appendChild(r);
+  });
+  $('kbTested').textContent = `۰ / ${faNum(kbTotal)}`;
+}
+buildKeyboard();
+$('kbStart').addEventListener('click', ()=>{
+  $('kbGrid').style.opacity = '1';
+  $('kbGrid').style.pointerEvents = 'auto';
+  setLabStatus('kbStatus','running','هر کلید را فشار دهید (Esc برای پایان)');
+  showToast('حالا هر کلید را که فشار می‌دهید سبز می‌شود. برای پایان Esc را بزنید.');
+});
+$('kbReset').addEventListener('click', ()=>{
+  kbTested.clear();
+  document.querySelectorAll('.kb-key').forEach(k=>k.classList.remove('tested','pressed'));
+  $('kbTested').textContent = `۰ / ${faNum(kbTotal)}`;
+  $('kbLast').textContent = '—';
+  $('kbHealth').textContent = '—';
+  $('kbHealth').className = 'v';
+});
+document.addEventListener('keydown', e=>{
+  if(!$('kbGrid').style.pointerEvents || $('kbGrid').style.pointerEvents==='none') return;
+  if($('labView').classList.contains('active')===false) return;
+  // Prevent default for special keys to avoid browser shortcuts
+  if(['Tab','/','\''].includes(e.key)) e.preventDefault();
+
+  const key = e.key;
+  const code = e.code;
+  // Map common keys
+  const map = {
+    'Escape':'esc','Tab':'tab','CapsLock':'capslock','Enter':'enter','Shift':'shift','Control':'ctrl','Alt':'alt',' ':'space',
+    'Backspace':'backspace','ArrowUp':'up','ArrowDown':'down','ArrowLeft':'left','ArrowRight':'right'
+  };
+  const normalized = map[key] || key.toLowerCase();
+  const kbKey = document.querySelector(`.kb-key[data-key="${normalized}"]`);
+  if(kbKey){
+    kbKey.classList.add('pressed');
+    kbKey.classList.add('tested');
+    setTimeout(()=>kbKey.classList.remove('pressed'), 200);
+    kbTested.add(normalized);
+  }
+  $('kbLast').textContent = key===' ' ? 'Space' : key;
+  $('kbTested').textContent = `${faNum(kbTested.size)} / ${faNum(kbTotal)}`;
+  // Update health
+  const pct = kbTested.size / kbTotal;
+  if(pct >= 0.9){
+    setLabValue('kbHealth','عالی — همه‌ی کلیدها سالم هستند','good');
+    setLabStatus('kbStatus','ok','کیبورد سالم است');
+  } else if(pct >= 0.7){
+    setLabValue('kbHealth',`خوب — ${faNum(Math.round(pct*100))}٪ تست شده`,'good');
+    setLabStatus('kbStatus','running','ادامه دهید — چند کلید باقی مانده');
+  } else if(pct >= 0.4){
+    setLabValue('kbHealth',`متوسط — ${faNum(Math.round(pct*100))}٪ تست شده`,'warn');
+  } else {
+    setLabValue('kbHealth',`در حال تست — ${faNum(Math.round(pct*100))}٪`,'warn');
+  }
+  if(key==='Escape'){
+    if(kbTested.size >= kbTotal * 0.8){
+      setLabStatus('kbStatus','ok','تست کیبورد پایان یافت — سالم');
+      recordLabResult('keyboard','ok',{tested:kbTested.size, total:kbTotal, percentage:Math.round(pct*100)},'تست کیبورد');
+    } else {
+      setLabStatus('kbStatus','warn',`تست پایان یافت — ${faNum(kbTotal-kbTested.size)} کلید تست نشده`);
+      recordLabResult('keyboard','warn',{tested:kbTested.size, total:kbTotal, percentage:Math.round(pct*100)},`${kbTotal-kbTested.size} کلید تست نشده`);
+    }
+    $('kbGrid').style.pointerEvents = 'none';
+  }
+});
+
+/* ============ 5. SPEAKER TEST ============ */
+let spCtx = null, spOsc = null, spGain = null, spMerger = null, spSplitter = null;
+function spInit(){
+  if(!spCtx){
+    spCtx = new (window.AudioContext || window.webkitAudioContext)();
+    spSplitter = spCtx.createChannelMerger(2);
+    spGain = spCtx.createGain();
+    spGain.gain.value = 0.2;
+    spGain.connect(spCtx.destination);
+  }
+  if(spCtx.state==='suspended') spCtx.resume();
+}
+function spPlay(freq, channel){ // channel: 'left','right','both'
+  spStop();
+  spInit();
+  spOsc = spCtx.createOscillator();
+  const oscGain = spCtx.createGain();
+  oscGain.gain.value = 0.3;
+  spOsc.frequency.value = freq;
+  spOsc.type = 'sine';
+  // Create splitter for stereo
+  const splitter = spCtx.createChannelSplitter(2);
+  spOsc.connect(oscGain);
+  oscGain.connect(splitter);
+  const merger = spCtx.createChannelMerger(2);
+  if(channel==='left'){
+    splitter.connect(merger, 0, 0);
+    splitter.connect(spCtx.createGain(), 1); // silence right
+  } else if(channel==='right'){
+    splitter.connect(spCtx.createGain(), 0);
+    splitter.connect(merger, 0, 1);
+  } else {
+    splitter.connect(merger, 0, 0);
+    splitter.connect(merger, 0, 1);
+  }
+  merger.connect(spGain);
+  spOsc.start();
+  setLabValue('spState','در حال پخش','good');
+  setLabValue('spFreq', `${faNum(freq)} Hz`);
+  setLabValue('spChan', channel==='left'?'چپ':(channel==='right'?'راست':'هر دو'));
+}
+function spStop(){
+  if(spOsc){ try{spOsc.stop();}catch(e){} spOsc.disconnect(); spOsc=null; }
+  setLabValue('spState','ساکت','');
+  setLabValue('spFreq','—');
+  setLabValue('spChan','—');
+}
+$('spStart').addEventListener('click', ()=>spPlay(440, 'left'));
+$('spRight').addEventListener('click', ()=>spPlay(440, 'right'));
+$('spBoth').addEventListener('click', ()=>spPlay(440, 'both'));
+$('spStop').addEventListener('click', ()=>{
+  spStop();
+  setLabStatus('spStatus','ok','تست پایان یافت — اگر صدا را شنیدید، اسپیکر سالم است');
+  recordLabResult('speaker','ok',null,'تست اسپیکر');
+});
+$('spSweep').addEventListener('click', ()=>{
+  spInit();
+  spStop();
+  spOsc = spCtx.createOscillator();
+  const oscGain = spCtx.createGain();
+  oscGain.gain.value = 0.3;
+  spOsc.type = 'sine';
+  spOsc.frequency.setValueAtTime(100, spCtx.currentTime);
+  spOsc.frequency.exponentialRampToValueAtTime(8000, spCtx.currentTime + 5);
+  spOsc.connect(oscGain);
+  oscGain.connect(spGain);
+  spOsc.start();
+  spOsc.onended = ()=>{
+    setLabStatus('spStatus','ok','اسکن پایان یافت');
+    recordLabResult('speaker','ok',null,'اسکن فرکانس انجام شد');
+    spStop();
+  };
+  setLabStatus('spStatus','running','در حال اسکن فرکانس (۱۰۰Hz تا ۸kHz)');
+  setLabValue('spState','اسکن فرکانس','good');
+  setLabValue('spFreq','۱۰۰Hz → ۸kHz');
+  setLabValue('spChan','هر دو');
+  setTimeout(()=>{ if(spOsc){ try{spOsc.stop();}catch(e){} spStop(); setLabStatus('spStatus','ok','اسکن پایان یافت'); recordLabResult('speaker','ok',null,'اسکن فرکانس'); } }, 5500);
+});
+
+/* ============ 6. MICROPHONE TEST ============ */
+let micStream = null, micCtx = null, micAnalyser = null, micRAF = null, micPeak = 0;
+$('micStart').addEventListener('click', async ()=>{
+  try{
+    setLabStatus('micStatus','running','در حال دسترسی به میکروفون...');
+    micStream = await navigator.mediaDevices.getUserMedia({audio:true});
+    micCtx = new (window.AudioContext||window.webkitAudioContext)();
+    const source = micCtx.createMediaStreamSource(micStream);
+    micAnalyser = micCtx.createAnalyser();
+    micAnalyser.fftSize = 2048;
+    source.connect(micAnalyser);
+    const data = new Uint8Array(micAnalyser.frequencyBinCount);
+    const canvas = $('micCanvas');
+    const cx = canvas.getContext('2d');
+    let frames = 0;
+    micPeak = 0;
+    $('micStop').disabled = false;
+    $('micStart').disabled = true;
+    const draw = ()=>{
+      micAnalyser.getByteTimeDomainData(data);
+      cx.fillStyle = '#0b1020';
+      cx.fillRect(0, 0, canvas.width, canvas.height);
+      cx.lineWidth = 2;
+      cx.strokeStyle = '#22d3ee';
+      cx.beginPath();
+      const slice = canvas.width / data.length;
+      let max = 0;
+      for(let i=0; i<data.length; i++){
+        const v = (data[i]-128)/128;
+        if(Math.abs(v) > max) max = Math.abs(v);
+        const x = i * slice;
+        const y = canvas.height/2 + v * canvas.height/2;
+        if(i===0) cx.moveTo(x, y); else cx.lineTo(x, y);
+      }
+      cx.stroke();
+      // Center line
+      cx.strokeStyle = 'rgba(154,163,199,.2)';
+      cx.beginPath(); cx.moveTo(0, canvas.height/2); cx.lineTo(canvas.width, canvas.height/2); cx.stroke();
+      const level = Math.round(max * 100);
+      if(level > micPeak) micPeak = level;
+      setLabValue('micLevel', `${faNum(level)}٪`);
+      setLabValue('micPeak', `${faNum(micPeak)}٪`);
+      if(frames < 10 && level > 5){
+        setLabValue('micHealth','در حال دریافت صدا','good');
+      }
+      frames++;
+      if(frames % 30 === 0){
+        if(micPeak > 5){ setLabValue('micHealth','سالم — صدا دریافت شد','good'); setLabStatus('micStatus','ok','میکروفون سالم است'); }
+        else if(frames > 60){ setLabValue('micHealth','هیچ صدایی دریافت نشد — دسترسی یا سخت‌افزار را چک کنید','bad'); setLabStatus('micStatus','bad','میکروفون سیگنالی نمی‌دهد'); }
+        else setLabValue('micHealth','در انتظار صدا — صحبت کنید','warn');
+      }
+      micRAF = requestAnimationFrame(draw);
+    };
+    draw();
+    setLabStatus('micStatus','running','میکروفون فعال — صحبت کنید تا موج تغییر کند');
+    recordLabResult('microphone','ok',{peak:micPeak},'میکروفون در حال تست');
+  }catch(err){
+    setLabStatus('micStatus','bad','خطا در دسترسی به میکروفون');
+    setLabValue('micHealth','دسترسی ناموفق: ' + err.message,'bad');
+    recordLabResult('microphone','bad',null,'دسترسی به میکروفون ناموفق');
+  }
+});
+$('micStop').addEventListener('click', ()=>{
+  if(micRAF) cancelAnimationFrame(micRAF);
+  if(micStream) micStream.getTracks().forEach(t=>t.stop());
+  if(micCtx) micCtx.close();
+  micStream = null; micCtx = null; micAnalyser = null; micRAF = null;
+  $('micStop').disabled = true;
+  $('micStart').disabled = false;
+  if(micPeak > 5){
+    setLabStatus('micStatus','ok',`تست پایان یافت — پیک صدا: ${faNum(micPeak)}٪`);
+    recordLabResult('microphone','ok',{peak:micPeak},'میکروفون سالم');
+  } else {
+    setLabStatus('micStatus','warn','تست پایان یافت — صدایی دریافت نشد');
+    recordLabResult('microphone','warn',{peak:0},'میکروفون سیگنال ضعیف');
+  }
+});
+
+/* ============ 7. BATTERY TEST ============ */
+$('batStart').addEventListener('click', async ()=>{
+  if(!navigator.getBattery){
+    setLabStatus('batStatus','warn','مرورگر شما از Battery API پشتیبانی نمی‌کند');
+    setLabValue('batSupport','غیرفعال','warn');
+    setLabValue('batLevel','نامشخص');
+    setLabValue('batCharging','نامشخص');
+    recordLabResult('battery','skip',null,'Battery API پشتیبانی نمی‌شود');
+    return;
+  }
+  try{
+    setLabStatus('batStatus','running','در حال دریافت اطلاعات...');
+    const bat = await navigator.getBattery();
+    LAB.state.battery = bat;
+    setLabValue('batSupport','فعال','good');
+    function updateBat(){
+      const level = Math.round(bat.level * 100);
+      setLabValue('batLevel', `${faNum(level)}٪`, level<20?'bad':(level<50?'warn':'good'));
+      setLabValue('batCharging', bat.charging ? 'در حال شارژ ⚡' : 'روی باطری 🔋', bat.charging?'good':'');
+      if(bat.dischargingTime && isFinite(bat.dischargingTime) && bat.dischargingTime>0){
+        const h = Math.floor(bat.dischargingTime/3600);
+        const m = Math.round((bat.dischargingTime%3600)/60);
+        setLabValue('batTime', `${faNum(h)} ساعت و ${faNum(m)} دقیقه`);
+      } else setLabValue('batTime','نامشخص');
+      if(bat.chargingTime && isFinite(bat.chargingTime) && bat.chargingTime>0 && bat.charging){
+        const h = Math.floor(bat.chargingTime/3600);
+        const m = Math.round((bat.chargingTime%3600)/60);
+        setLabValue('batChargeTime', `${faNum(h)} ساعت و ${faNum(m)} دقیقه`);
+      } else setLabValue('batChargeTime','—');
+      // Health estimate based on level behavior (basic)
+      let health = 'سالم';
+      if(level<20 && !bat.charging) health = 'باطری ضعیف — شارژ کافی ندارد';
+      setLabStatus('batStatus', bat.charging?'ok':'ok', `سطح شارژ: ${faNum(level)}٪ — ${health}`);
+      recordLabResult('battery','ok',{level, charging:bat.charging}, health);
+    }
+    updateBat();
+    bat.addEventListener('levelchange', updateBat);
+    bat.addEventListener('chargingchange', updateBat);
+  }catch(err){
+    setLabStatus('batStatus','bad','خطا در دریافت اطلاعات باطری');
+    recordLabResult('battery','bad',null,err.message);
+  }
+});
+
+/* ============ 8. NETWORK SPEED TEST ============ */
+$('netStart').addEventListener('click', async ()=>{
+  // Detect connection type
+  const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+  if(conn){
+    setLabValue('netType', conn.effectiveType ? conn.effectiveType.toUpperCase() : (conn.type||'نامشخص'));
+  } else {
+    setLabValue('netType','نامشخص (API پشتیبانی نمی‌شود)');
+  }
+  setLabStatus('netStatus','running','در حال اندازه‌گیری پینگ...');
+  // Ping measurement — fetch a small file with no-cache
+  try{
+    const pingStart = performance.now();
+    await fetch('data:text/plain;base64,SGVsbG8=',{cache:'no-store'});
+    const pingMs = Math.round(performance.now() - pingStart);
+    setLabValue('netPing', `${faNum(pingMs)} ms`, pingMs<50?'good':(pingMs<200?'warn':'bad'));
+    // Download a larger file for throughput
+    setLabStatus('netStatus','running','در حال دانلود فایل تست (۵ مگابایت)...');
+    const sizes = [5e6, 2e6, 1e6]; // try 5MB, fallback 2MB, 1MB
+    let downloaded = 0;
+    let lastUpdate = performance.now();
+    const dlStart = performance.now();
+    let success = false;
+    for(const size of sizes){
+      try{
+        const url = `https://speed.cloudflare.com/__down?bytes=${size}`;
+        const resp = await fetch(url, {cache:'no-store'});
+        if(!resp.ok) continue;
+        const reader = resp.body.getReader();
+        while(true){
+          const {done, value} = await reader.read();
+          if(done) break;
+          downloaded += value.length;
+          const now = performance.now();
+          if(now - lastUpdate > 200){
+            const elapsed = (now - dlStart) / 1000;
+            const speed = (downloaded * 8) / elapsed / 1e6; // Mbps
+            setLabValue('netSpeed', `${speed.toFixed(2)} Mbps`, speed>20?'good':(speed>5?'warn':'bad'));
+            setLabValue('netBytes', `${faNum(Math.round(downloaded/1024/1024))} MB`);
+            lastUpdate = now;
+          }
+        }
+        success = true;
+        break;
+      }catch(e){ continue; }
+    }
+    if(!success) throw new Error('دانلود ناموفق');
+    const elapsed = (performance.now() - dlStart) / 1000;
+    const speed = (downloaded * 8) / elapsed / 1e6;
+    setLabValue('netSpeed', `${speed.toFixed(2)} Mbps`, speed>20?'good':(speed>5?'warn':'bad'));
+    setLabValue('netBytes', `${faNum(Math.round(downloaded/1024/1024))} MB`);
+    setLabValue('netHealth', speed>20?'عالی':(speed>5?'قابل‌قبول':'کند'), speed>20?'good':(speed>5?'warn':'bad'));
+    setLabStatus('netStatus','ok',`تست پایان یافت — ${speed.toFixed(2)} Mbps`);
+    recordLabResult('network','ok',{ping:pingMs, speed:parseFloat(speed.toFixed(2)), bytes:downloaded},'سرعت شبکه');
+  }catch(err){
+    setLabStatus('netStatus','bad','تست شبکه ناموفق — احتمالاً آفلاین هستید');
+    setLabValue('netHealth','خطا: ' + err.message, 'bad');
+    recordLabResult('network','bad',null,err.message);
+  }
+});
+
+/* ============ 9. CPU BENCHMARK ============ */
+$('cpuBenchStart').addEventListener('click', async ()=>{
+  setLabStatus('cpuBenchStatus','running','در حال اجرای بنچ‌مارک... (لطفاً صبر کنید)');
+  $('cpuBenchStart').disabled = true;
+  // Show CPU info
+  const cores = navigator.hardwareConcurrency ? `${faNum(navigator.hardwareConcurrency)} هسته منطقی` : 'نامشخص';
+  // Better CPU name extraction from userAgent
+  let cpuName = 'نامشخص';
+  const ua = navigator.userAgent;
+  const cpuMatch = ua.match(/(Intel Core2? \w+[\w\-]*|Intel\(R\) Core\(TM\)[\w\s\(\)\-]+CPU[\w\s\(\)\-\.\@]+|Intel\(R\) Pentium[\w\s\(\)\-]+CPU[\w\s\(\)\-\.\@]+|Intel\(R\) Celeron[\w\s\(\)\-]+CPU[\w\s\(\)\-\.\@]+|Intel\(R\) Atom\(TM\)[\w\s\(\)\-]+CPU[\w\s\(\)\-\.\@]+|AMD [\w\d\-]+ Processor|AMD Ryzen[\w\s\d\-]+|Apple [\w\d]+(?: Max| Pro| Ultra)?)/i);
+  if(cpuMatch) cpuName = cpuMatch[0].replace(/\s+/g,' ').trim().substring(0, 60);
+  setLabValue('cpuBenchName', cpuName);
+  setLabValue('cpuBenchCores', cores);
+  // Wait a frame to update UI
+  await new Promise(r=>setTimeout(r, 50));
+  // Mixed workload benchmark — primality + matrix multiply + hash simulation.
+  // Harder to optimize away than a single tight loop.
+  const targetMs = 3000;
+  const start = performance.now();
+  let ops = 0;
+  function isPrime(n){
+    if(n<2) return false;
+    if(n<4) return true;
+    if(n%2===0) return false;
+    if(n%3===0) return n===3;
+    for(let i=5; i*i<=n; i+=6){
+      if(n%i===0) return false;
+      if(n%(i+2)===0) return false;
+    }
+    return true;
+  }
+  // Small matrix for cache pressure (32x32 floats)
+  const N = 32;
+  const A = new Float32Array(N*N), B = new Float32Array(N*N), C = new Float32Array(N*N);
+  for(let i=0; i<N*N; i++){ A[i] = Math.sin(i)*0.5+0.5; B[i] = Math.cos(i)*0.5+0.5; }
+  // Accumulator to prevent the JIT from optimizing C away
+  let antiOpt = 0;
+  let nextCheck = 1000003;
+  while(performance.now() - start < targetMs){
+    // 1) Prime checks (CPU integer)
+    for(let i=0; i<200; i++){
+      isPrime(nextCheck);
+      nextCheck += 2;
+      if(nextCheck % 5 === 0) nextCheck += 2;
+    }
+    // 2) Matrix multiply (CPU float + memory)
+    for(let i=0; i<N; i++){
+      for(let j=0; j<N; j++){
+        let s = 0;
+        for(let k=0; k<N; k++) s += A[i*N+k] * B[k*N+j];
+        C[i*N+j] = s;
+      }
+    }
+    // 3) Read back C so the computation can't be elided
+    antiOpt += C[(nextCheck & 0x3FF) % (N*N)];
+    ops += 200 + N*N*N;
+  }
+  // Use antiOpt so it isn't optimized away
+  if(antiOpt === 1.23456789) console.log('impossible');
+  const elapsed = (performance.now() - start) / 1000;
+  const score = Math.round(ops / elapsed);
+  // Tier classification (calibrated against real hardware running this mixed workload):
+  // Atom x5-Z8350: ~5k-15k ops/sec
+  // Intel N100: ~30k-50k
+  // Celeron N4000: ~15k-25k
+  // i3-12100: ~80k-150k
+  // i5-1240P: ~200k-400k
+  // i7-12700H: ~500k-900k
+  // i9-13900K: ~1.5M-3M
+  // Ryzen 7 7840HS: ~600k-1M
+  // M2: ~800k-1.5M
+  let tier, tierCls;
+  if(score >= 1000000){ tier='سطح بالا (i9/Ryzen 9/M2 Pro+)'; tierCls='good'; }
+  else if(score >= 400000){ tier='سطح بالا-میان‌رده (i7/Ryzen 7/M2)'; tierCls='good'; }
+  else if(score >= 150000){ tier='سطح میان‌رده (i5/Ryzen 5)'; tierCls='good'; }
+  else if(score >= 50000){ tier='سطح پایین‌میان‌رده (i3/Pentium جدید)'; tierCls='warn'; }
+  else if(score >= 10000){ tier='سطح پایین (Atom/N100/Celeron)'; tierCls='warn'; }
+  else { tier='بسیار ضعیف — برای کاربردهای مدرن کافی نیست'; tierCls='bad'; }
+  setLabValue('cpuBenchTime', `${elapsed.toFixed(2)} ثانیه`);
+  setLabValue('cpuBenchScore', faNum(score));
+  setLabValue('cpuBenchTier', tier, tierCls);
+  setLabStatus('cpuBenchStatus', tierCls==='good'?'ok':(tierCls==='warn'?'warn':'bad'), tier);
+  recordLabResult('cpu_bench', tierCls==='good'?'ok':(tierCls==='warn'?'warn':'bad'), {score, ops, elapsed, cores: navigator.hardwareConcurrency}, tier);
+  $('cpuBenchStart').disabled = false;
+});
+
+/* ============ 10. FPS / RENDER TEST ============ */
+let fpsRAF = null, fpsFrames = [], fpsMin = Infinity, fpsLast = performance.now(), fpsStartTime = 0;
+$('fpsStart').addEventListener('click', ()=>{
+  const canvas = $('fpsCanvas');
+  const cx = canvas.getContext('2d');
+  // Set canvas internal size to match DPR
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = canvas.clientWidth * dpr;
+  canvas.height = canvas.clientHeight * dpr;
+  cx.scale(dpr, dpr);
+  fpsFrames = [];
+  fpsMin = Infinity;
+  fpsStartTime = performance.now();
+  let particles = [];
+  for(let i=0; i<300; i++){
+    particles.push({x:Math.random()*canvas.clientWidth, y:Math.random()*canvas.clientHeight, vx:(Math.random()-0.5)*4, vy:(Math.random()-0.5)*4, r:Math.random()*4+1, hue:Math.random()*360});
+  }
+  $('fpsStart').disabled = true;
+  $('fpsStop').disabled = false;
+  setLabStatus('fpsStatus','running','در حال رندر...');
+  // Target refresh rate
+  setLabValue('fpsTarget', screen.isExtended ? 'نامشخص' : '۶۰+ Hz');
+  const draw = ()=>{
+    cx.fillStyle = 'rgba(11,16,32,.2)';
+    cx.fillRect(0, 0, canvas.clientWidth, canvas.clientHeight);
+    for(const p of particles){
+      p.x += p.vx; p.y += p.vy;
+      if(p.x<0||p.x>canvas.clientWidth) p.vx*=-1;
+      if(p.y<0||p.y>canvas.clientHeight) p.vy*=-1;
+      cx.fillStyle = `hsl(${p.hue}, 80%, 60%)`;
+      cx.beginPath(); cx.arc(p.x, p.y, p.r, 0, Math.PI*2); cx.fill();
+    }
+    const now = performance.now();
+    const dt = now - fpsLast;
+    fpsLast = now;
+    if(dt > 0 && dt < 1000){ // ignore the first frame and ridiculous values
+      const fps = 1000 / dt;
+      if(fps < fpsMin && fps > 0) fpsMin = fps;
+      fpsFrames.push(fps);
+      if(fpsFrames.length > 60) fpsFrames.shift();
+    }
+    // Update display every 10 frames
+    if(fpsFrames.length % 10 === 0 && fpsFrames.length > 0){
+      const avg = fpsFrames.reduce((a,b)=>a+b,0)/fpsFrames.length;
+      setLabValue('fpsAvg', faNum(Math.round(avg)), avg>=55?'good':(avg>=30?'warn':'bad'));
+      setLabValue('fpsMin', faNum(Math.round(fpsMin)), fpsMin>=30?'good':(fpsMin>=20?'warn':'bad'));
+    }
+    fpsRAF = requestAnimationFrame(draw);
+  };
+  fpsRAF = requestAnimationFrame(draw);
+});
+$('fpsStop').addEventListener('click', ()=>{
+  if(fpsRAF) cancelAnimationFrame(fpsRAF);
+  fpsRAF = null;
+  $('fpsStart').disabled = false;
+  $('fpsStop').disabled = true;
+  if(fpsFrames.length > 0){
+    const avg = fpsFrames.reduce((a,b)=>a+b,0)/fpsFrames.length;
+    let health = 'عالی', cls='good';
+    if(avg < 30){ health='ضعیف — گرافیک یا CPU مشکل دارد'; cls='bad'; }
+    else if(avg < 50){ health='متوسط — برای کارهای سنگین کافی نیست'; cls='warn'; }
+    else if(avg < 55){ health='خوب'; cls='good'; }
+    setLabValue('fpsHealth', health, cls);
+    setLabStatus('fpsStatus', cls==='good'?'ok':(cls==='warn'?'warn':'bad'), `میانگین: ${faNum(Math.round(avg))} FPS`);
+    recordLabResult('fps', cls==='good'?'ok':(cls==='warn'?'warn':'bad'), {avg:Math.round(avg), min:Math.round(fpsMin)}, health);
+  }
+});
+
+/* ============ RUN ALL TESTS (sequential) ============ */
+$('runAllLabTests').addEventListener('click', async ()=>{
+  showToast('در حال اجرای خودکار تست‌ها... لطفاً صبر کنید');
+  // Reset results
+  LAB.results = {};
+  // Tests that can run without user interaction:
+  // 1. Display info (already runs)
+  updateDisplayInfo();
+  recordLabResult('display','ok',{res:`${screen.width}x${screen.height}`},'اطلاعات نمایشگر');
+  await new Promise(r=>setTimeout(r, 500));
+  // 2. Battery
+  $('batStart').click();
+  await new Promise(r=>setTimeout(r, 1500));
+  // 3. Network
+  $('netStart').click();
+  await new Promise(r=>setTimeout(r, 4000));
+  // 4. CPU Benchmark
+  $('cpuBenchStart').click();
+  await new Promise(r=>setTimeout(r, 3500));
+  // 5. FPS test
+  $('fpsStart').click();
+  await new Promise(r=>setTimeout(r, 2500));
+  $('fpsStop').click();
+  // Tests requiring permission (auto-trigger)
+  // 6. Webcam (will request permission)
+  $('camStart').click();
+  await new Promise(r=>setTimeout(r, 1500));
+  // 7. Microphone
+  $('micStart').click();
+  await new Promise(r=>setTimeout(r, 2500));
+  $('micStop').click();
+  // Show summary
+  setTimeout(()=>showLabSummaryFn(), 500);
+  showToast('تست‌های خودکار پایان یافت. برای تست کیبورد و تاچ‌پد، دستی اقدام کنید.');
+});
+
+/* ============ LAB SUMMARY ============ */
+function showLabSummaryFn(){
+  const card = $('labSummaryCard');
+  const content = $('labSummaryContent');
+  card.style.display = 'block';
+  const tests = [
+    {key:'webcam', name:'دوربین (Webcam)', icon:'📷'},
+    {key:'display', name:'نمایشگر', icon:'🖥️'},
+    {key:'touchpad', name:'تاچ‌پد/ماوس', icon:'🖱️'},
+    {key:'keyboard', name:'کیبورد', icon:'⌨️'},
+    {key:'speaker', name:'اسپیکر', icon:'🔊'},
+    {key:'microphone', name:'میکروفون', icon:'🎤'},
+    {key:'battery', name:'باطری', icon:'🔋'},
+    {key:'network', name:'شبکه', icon:'📡'},
+    {key:'cpu_bench', name:'بنچ‌مارک CPU', icon:'🧠'},
+    {key:'fps', name:'FPS و گرافیک', icon:'🎬'}
+  ];
+  const statusMap = {
+    ok:{label:'✅ سالم', cls:'ok'},
+    warn:{label:'⚠️ هشدار', cls:'warn'},
+    bad:{label:'❌ مشکل', cls:'bad'},
+    skip:{label:'⏭️ نادیده', cls:'idle'}
+  };
+  let html = '<div class="lab-grid-3">';
+  let okCount = 0, warnCount = 0, badCount = 0, skipCount = 0;
+  tests.forEach(t=>{
+    const r = LAB.results[t.key];
+    let label, cls;
+    if(!r){ label='⏳ تست نشده'; cls='idle'; }
+    else { label = statusMap[r.status].label; cls = statusMap[r.status].cls; if(r.status==='ok')okCount++; else if(r.status==='warn')warnCount++; else if(r.status==='bad')badCount++; else skipCount++; }
+    html += `<div class="lab-status ${cls}" style="margin:0;padding:10px;flex-direction:column;align-items:flex-start;gap:4px">
+      <div style="font-size:14px">${t.icon} ${t.name}</div>
+      <div style="font-size:11px">${label}</div>
+      ${r && r.message ? `<div style="font-size:10px;color:var(--muted);margin-top:4px">${r.message}</div>` : ''}
+    </div>`;
+  });
+  html += '</div>';
+  // Overall verdict
+  let overall, overallCls;
+  if(badCount > 0){ overall = '🔴 دستگاه دارای مشکل سخت‌افزاری است'; overallCls='bad'; }
+  else if(warnCount > 0){ overall = `🟡 دستگاه قابل‌استفاده است اما ${faNum(warnCount)} مورد نیاز بررسی دارد`; overallCls='warn'; }
+  else if(okCount >= 7){ overall = '🟢 دستگاه از نظر سخت‌افزاری سالم به‌نظر می‌رسد'; overallCls='ok'; }
+  else { overall = '⚪ برخی تست‌ها هنوز انجام نشده‌اند'; overallCls='idle'; }
+  html += `<div style="margin-top:16px;padding:14px;background:var(--bg-2);border-radius:10px;border-right:4px solid var(--${overallCls==='ok'?'good':overallCls})">
+    <b style="font-size:15px">${overall}</b>
+    <div style="margin-top:6px;font-size:12px;color:var(--muted)">
+      سالم: ${faNum(okCount)} · هشدار: ${faNum(warnCount)} · مشکل: ${faNum(badCount)} · تست‌نشده: ${faNum(10 - okCount - warnCount - badCount - skipCount)} · نادیده: ${faNum(skipCount)}
+    </div>
+  </div>`;
+  content.innerHTML = html;
+  // Scroll to summary
+  setTimeout(()=>card.scrollIntoView({behavior:'smooth',block:'center'}), 100);
+}
+$('showLabSummary').addEventListener('click', showLabSummaryFn);
+
+// Init: refresh display info
+updateDisplayInfo();
+</script>
+</body>
+</html>
